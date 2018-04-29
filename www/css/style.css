@@ -1,1 +1,722 @@
-/* Empty. Add your own CSS if you like */
+ion-view ion-content,
+ion-list,
+ion-nav-view,
+.item,
+.list,
+.item-content,
+a.item-content,
+.item-chat,
+.item-complex .item-content,
+.item-radio .item-content,
+body{
+	background: #2c3e50 /*#2c3e50*/;
+	color: #f2f2f2;
+}
+
+.keyboard-open .has-tabs {
+    bottom: 0px !important;
+}
+
+.keyboard-open .tab-nav {
+    /*margin-bottom: 0px !important;*/
+    display: none;
+}
+
+ion-content > .scroll{
+	height: 100%;
+}
+
+.platform-android .action-sheet-group{
+	background-color: #444;
+}
+
+.platform-android .action-sheet .action-sheet-title{
+	color: #f2f2f2;
+	border-bottom: 1px solid steelblue;
+}
+
+.platform-android .action-sheet .button{
+	padding: 0px 10px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+small,
+label,
+.item p,
+p{
+	color: #f2f2f2;
+}
+
+input[type="radio"]{
+	display: none;
+}
+
+.button-center{
+	margin: auto;
+	display: block;
+}
+
+i.energized,
+i.ion-star{
+	color: #ffc900;
+}
+
+.bar-footer.footer-buttons,
+.bar-footer.footer-buttons .row{
+     padding: 0px;
+}
+
+.bar-footer.footer-buttons .row .col{
+     text-align: center;
+}
+
+.card,
+.card .item{
+	/*background: #fff;*/
+	/*color: #000;*/
+}
+
+.input-label{
+	color: #f2f2f2;
+}
+
+.item-input input[type="text"]{
+	background: rgba(255, 255, 255, .1);
+	border-radius: 2px;
+	color: #fff;
+	padding: 5px;
+}
+
+.popover body,
+.popover *,
+.card *{
+	/*color: #000;*/
+}
+
+.popover{
+	/*width: 100vw;*/
+	position: fixed;
+}
+
+#popupTop{
+	position: fixed;
+	top: 10vh;
+	width: 100vw;
+}
+
+.tabs.tabs-top{
+	height: 60px;
+}
+
+.tabs.tabs-top button{
+	font-size: 30px;
+	position: absolute;
+	left: 15px;
+	line-height: 60px;
+}
+
+.tabs-top a{
+	font-size: 18px;
+	line-height: 60px;
+}
+
+.has-tabs-top{
+	top: 60px;
+}
+
+.has-tabs-top-and-search{
+	top: 60px;
+}
+
+/*Login*/
+
+#loginPage{
+	/*background: #2c3e50;*/
+}
+
+.logo{
+	display: block;
+	margin: 50px auto;
+	width: 80%;
+}
+
+.loginForm .list{
+	background: transparent;
+}
+
+.loginForm .item-floating-label{
+	width: 80%;
+	margin: auto;
+}
+
+.loginForm span{
+	display: block;
+	width: 100%;
+	margin: auto;
+	color: #f2f2f2;
+}
+
+.loginForm .item{
+	border: none;
+	background: transparent;
+}
+
+.signUpForm .item{
+	border: none;
+	margin: 5px auto;
+}
+
+.signUpForm input[type="text"],
+.signUpForm input[type="email"],
+.signUpForm input[type="password"]{
+	background: rgba(0, 0, 0, .3);
+	margin: 2px;
+	border-radius: 3px;
+	padding: 5px;
+	color: #f2f2f2;
+}
+
+.signUpForm select{
+	background: transparent;
+	color: #f2f2f2;
+}
+
+.signUpForm select option{
+	background: #444;
+}
+
+.loginForm input{
+	border-bottom: 1px solid #f2f2f2;
+	width: 80%;
+	margin: auto;
+	padding: 10px;
+	transition: ease all .3s;
+	color: #f2f2f2;
+}
+
+.loginForm input:focus{
+	border-bottom-color: #387ef5;
+}
+
+.loginForm input::placeholder{
+	color: #929292;
+}
+
+/*Stocks*/
+
+.stock-search span{
+	width: 20px;
+}
+
+.item-stock{
+}
+
+.item-stock .item-content{
+	padding: 0px;
+}
+
+.item-stock span{
+	font-size: 12px;
+}
+
+.item-stock .col-10{
+	/*line-height: 45px;*/
+	padding: 10px 0px;
+}
+
+.item-stock .comunity-rating{
+	display: inline-block;
+	width: 30px;
+	padding: 5px;
+	border-radius: 45px;
+	color: #fff;
+	text-align: center;
+}
+
+.comunity-rating.rate_0{
+	background: #808080;
+}
+.comunity-rating.rate_1{
+	background: #ff0000;
+}
+.comunity-rating.rate_2{
+	background: #800000;
+}
+.comunity-rating.rate_3{
+	background: #ffcc00;
+}
+.comunity-rating.rate_4{
+	background: #008000;
+}
+.comunity-rating.rate_5{
+	background: #33cd5f;
+}
+
+.item-stock img{
+	height: 45px;
+	width: 45px;
+	display: block;
+	margin: auto;
+	border-radius: 50%;
+}
+
+.item-stock h2{
+	font-size: 18px;
+}
+
+.item-stock h2 small{
+	font-size: 14px;
+}
+
+#filters-trigger{
+	position: absolute;
+	top: 50px;
+	right: 0px;
+	z-index: 1;
+}
+
+/*Stock details*/
+
+#cryproDetails,
+#stockDetails{
+}
+
+#cryproDetails .item,
+#stockDetails .item{
+	padding: 3px;
+}
+
+#cryproDetails .item h4,
+#stockDetails .item h4{
+	font-size: 16px;
+	margin: 5px;
+}
+
+#cryproDetails .item span,
+#stockDetails .item span{
+	font-size: 14px;
+	/*padding: 5px 10px;*/
+}
+
+.inside-tab-content{
+	border: none;
+	padding: 10px;
+}
+
+#stock-company img{
+	float: left;
+	margin: 5px 10px 5px 5px;
+}
+
+#stock-comments .comments-container{
+	max-height: 130px;
+	padding: 10px;
+}
+
+#stock-comments .comments-container p,
+#stock-comments .comments-container p span{
+	font-size: 14px;
+	line-height: 18px;
+	color: #fff;
+}
+
+#stock-comments .comments-container p{
+	margin-bottom: 10px;
+	padding: 5px 3px;
+	border-radius: 3px;
+	background: rgba(0, 0, 0, .2);
+}
+
+#stock-comments .comments-container p span{
+	white-space: pre-line;
+}
+
+#stock-comments .comments-write{
+	padding: 7px;
+}
+
+#stock-comments .comments-write textarea{
+	width: 100%;
+	background: transparent;
+	padding: 5px 0px;
+	resize: none;
+}
+
+#stock-financials i{
+	font-size: 20px;
+}
+
+/*Stock Tabs*/
+
+.inside-tabs{
+}
+
+.inside-tabs .col{
+	border-left: 1px solid transparent /*#2c3e50*/;
+	border-right: 1px solid transparent /*#2c3e50*/;
+}
+
+.inside-tabs .col{
+	padding: 0px;
+}
+
+.inside-tabs label{
+	display: block;
+	border-bottom: 2px solid #999;
+	padding: 3px;
+	text-align: center;
+	transition: .3s;
+}
+
+.inside-tabs input[type="radio"]:checked + label{
+	border-bottom-color: #1abc9c;
+	border-bottom-width: 3px;
+}
+
+/*stock-rating*/
+
+#stock-rating .row{
+	/*padding-bottom: 25px;*/
+}
+
+#stock-rating h3,
+#stock-rating .ratingStars{
+	margin: auto;
+	text-align: center;
+}
+
+.range-labels {
+	width: 100%;
+	margin: auto;
+	text-align: center;
+}
+.range-labels li {
+	position: relative;
+	float: left;
+	margin: auto;
+	width: 20%;
+}
+
+#stock-rating{
+ position: relative;
+}
+
+#stock-rating textarea{
+	border: 1px solid #1abc9c;
+	border-radius: 5px;
+	resize: none;
+	padding: 5px;
+}
+
+/*#stock-rating button{
+	position: absolute;
+	right: 0px;
+}
+*/
+/*Profile*/
+
+.card.profile .item{
+	background: #f9f9f9;
+}
+
+.card.profile .item-divider{
+	background: #f2f2f2;
+}
+
+.card.profile *{
+	color: #000;
+}
+
+.avatar-container{
+	/*height: 120px;*/
+	padding: 5px;
+}
+
+.avatar-container *{
+	color: #444;
+}
+
+.avatar{
+	width: 100%;
+	/*position: relative;*/
+	/*top: -100px;*/
+	/*left: 0px;*/
+	border-radius: 15px;
+	padding: 5px;
+	/*float: left;*/
+}
+
+.h-scroll{
+	overflow: scroll;
+}
+
+.h-scroll span{
+	padding: 5px 25px;
+}
+
+/*Chat*/
+
+.item-chat .last-message-timestamp{
+	position: absolute;
+	top: 16px;
+	right: 38px;
+	font-size: 14px;
+	color: #9a9898;
+}
+
+#messages-container{
+	height: calc(100% - 100px);
+	/*padding-bottom: 100px;*/
+	/*overflow-y: auto;*/
+	padding-top: 20px;
+}
+
+.message{
+	display: block;
+}
+
+.message-content{
+	display: inline-block;
+	max-width: 80%;
+	position: relative;
+	min-height: 30px;
+	margin-top: 10px;
+}
+
+.message.message-in{
+}
+
+.message .text-container{
+	border-radius: 7px;
+	color: #444;
+	padding: 2px 10px;
+	position: relative;
+}
+
+.message-in .text-container{
+	background: #bdc3c7 /*#2c3e50*/;
+	margin-left: 50px;
+}
+
+.message-out{
+	text-align: right;
+}
+.message-out .text-container{
+	background: #acb4b9 /*#2c3e50*/;
+	margin-right: 50px;
+	text-align: left;
+}
+
+.message .text-container p{
+	font-size: 14px;
+}
+
+.message .text-container span{
+	color: #505050;
+	font-size: 10px;
+}
+
+.avatar-container:before{
+	content: "";
+	height: 25px;
+	width: 25px;
+	position: absolute;
+	bottom: 0px;
+	z-index: -1;
+}
+
+.message-in .avatar-container:before{
+	background: #bdc3c7;
+	right: -5px;
+}
+
+.message-out .avatar-container:before{
+	background: #acb4b9;
+	left: -5px;
+}
+
+
+.message img{
+	background: #f2f2f2;
+	border-radius: 50%;
+	height: 90%;
+	margin: 5%;
+	padding: 5px;
+	width: 90%;
+}
+
+.message .avatar-container{
+	height: 50px;
+	width: 50px;
+	background: #2c3e50;
+	position: absolute;
+	bottom: 0px;
+}
+
+.message-in .avatar-container{
+	left: 0px;
+	border-radius: 7px 50px 50px 7px;
+}
+
+.message-out .avatar-container{
+	right: 0px;
+	border-radius: 50px 7px 7px 50px;
+}
+
+#message-input{
+	position: absolute;
+	bottom: 0px;
+	width: 100vw;
+	background: #34495e;
+	height: 80px;
+	border-radius: 15px 15px 0px 0px;
+	box-shadow: 0px -5px 10px 0px rgba(0, 0, 0, .3);
+}
+
+#message-input textarea{
+	/*height: 50px;*/
+	width: 100%;
+	background: transparent;
+	resize: none;
+	padding: 5px 0px;
+}
+
+#message-input button{
+	font-size: 25px;
+	/*
+	position: absolute;
+	top: 15px;
+	right: 5%;
+	width: 50px;
+	height: 50px;
+	*/
+	
+}
+
+.modal-transparent{
+	background: rgba(0, 0, 0, 0.5);
+	/*top: 50%;*/
+}
+
+.modal-settings{
+}
+
+.modal-settings .card{
+	padding-bottom: 10px;
+}
+
+.modal-settings .item{
+	border: none;
+	margin: 5px;
+}
+
+.modal-settings .item-divider h2{
+	font-size: 20px;
+	padding: 5px;
+}
+
+.modal-settings .radio-content{
+}
+
+.modal-settings .radio-content .item-content{
+	border-radius: 5px;
+	background: rgba(0, 0, 0, .1);
+}
+
+.modal-settings .item-radio input:checked + .radio-content .item-content{
+	background: rgba(255, 255, 255, .1);
+}
+
+.modal-transparent ion-content{
+}
+
+.modal-transparent .list,
+.modal-transparent .item,
+.modal-transparent .item{
+}
+
+/*Profile*/
+
+.user-data,
+.user-data .inside-tab-content{
+	background: #f2f2f2;
+}
+
+.user-data .inside-tabs label{
+	color: #444;
+}
+
+.user-data select{
+	background: transparent;
+	color: #444;
+}
+
+.user-data select option{
+	background: #444;
+	color: #f2f2f2;
+}
+
+.user-data .inside-tabs input[type="radio"]:checked + label{
+	border-bottom-color: #2c3e50;
+}
+
+#profile .inside-tab-content .list,
+#profile .inside-tab-content .item{
+	background: transparent;
+	border: none;
+	margin: 0px;
+}
+
+#profile .inside-tab-content label{
+	color: #444;
+}
+
+#profile .inside-tab-content input{
+	color: #f2f2f2;
+	background: #444;
+}
+
+
+.user-info{
+	text-align: center;
+	padding: 20px;
+}
+
+.profile-image-wrapper {
+  text-align: center;
+  margin: 20px 0;
+}
+.profile-image {
+	width: 120px;
+	height: 120px;
+	border-radius: 50%;
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+}
+.profile-image img{
+	border-radius: 50%;
+	width: 120px;
+	height: 120px;
+	border: 3px solid #f2f2f2;
+}
+.profile-image-placeholder ion-icon {
+	font-size: 44px;
+	margin-bottom: -10px;
+	margin-top: 10px;
+}
+.profile-image-placeholder {
+	display: inline-block;
+	background-color: #eee;
+	width: 120px;
+	height: 120px;
+	border-radius: 50%;
+	font-size: 12px;
+}

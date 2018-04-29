@@ -1,0 +1,32 @@
+<ion-view view-title="connects">
+	<ion-content>
+		<ion-list>
+			<ion-item ng-repeat="x in connects" class="item-chat item-remove-animate item-avatar">
+				<img ng-src="https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png">
+				<h2>{{x.name}}</h2>
+				<p>
+					<i class="ion ion-chatbox-working"></i> {{0+x.commentedCount}}
+					<i class="ion ion-heart"></i> {{0+x.watchlistCount}}
+					<i class="ion ion-ios-people"></i> {{0+x.connectsCount}}
+					<i class="ion ion-ios-star-half"></i> {{0+x.ratingsCount}}
+				</p> 
+				<ion-option-button class="button-assertive icon ion-close-round" ng-click="delete($index, x)">
+				</ion-option-button>
+				<ion-option-button class="button-calm icon ion-chatboxes" ng-click="checkChat(x.$id)">
+				</ion-option-button>
+				<ion-option-button class="button-calm icon ion-person" ui-sref="app.connectProfile({id:x.$id})">
+				</ion-option-button>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+	<!-- <ion-tabs class="tabs-icon-top tabs-balanced">
+
+		<ion-tab title="Privates" icon="ion-chatboxes" href="#/app/privates">
+		</ion-tab>
+
+		<ion-tab title="Public" icon="ion-ios-people" href="#/app/public">
+		</ion-tab>
+
+	</ion-tabs> -->
+
+</ion-view>

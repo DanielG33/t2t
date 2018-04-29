@@ -1,0 +1,32 @@
+<ion-view view-title="Public Chat">
+	<div class="bar bar-header bar-dark">
+		<button class="button button-clear button-light icon-left ion-ios-arrow-back" ng-click="goBack()"></button>
+		<h1 class="title" style="display:table-cell; vertical-align:bottom;">
+			<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png" style="height: 85%; padding: 3px; background: #f2f2f2; border-radius: 50%; vertical-align:bottom; margin-bottom: 4px">
+			<span>{{title}}</span>
+		</h1>
+	</div>
+	<ion-content class="has-header">
+		<ion-scroll id="messages-container">
+			<div class="message" ng-repeat="message in messages" ng-class="{'message-in': message.uid != uid, 'message-out': message.uid == uid}">
+				<div class="message-content">
+					<div class="avatar-container">
+						<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png" ng-if="message.uid != uid">
+					</div>
+					<div class="text-container">
+						<span class="timestamp">{{message.time}}</span>
+						<pre ng-bind-html="message.text"></pre>
+					</div>
+				</div>
+			</div>
+			<div id="bottom"></div>
+		</ion-scroll>
+
+		<div id="message-input" class="item item-input-inset">
+			<label class="item-input-wrapper">
+				<textarea id="textarea" ng-model="data.message" placeholder="Share your trading thoughts and/or an article"></textarea>
+			</label>
+			<button class="button button-dark button-icon icon ion-paper-airplane" ng-click="sendMessage()"></button>
+		</div>
+	</ion-content>
+</ion-view>

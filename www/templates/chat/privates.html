@@ -1,0 +1,29 @@
+<ion-view view-title="Private chats">
+	<div class="tabs tabs-top" style="top: 0px;">
+		<a class="tab-item tab-item-active" href="#/app/privates">Private</a>
+		<a class="tab-item" href="#/app/public">Public</a>
+	</div>
+	<ion-content class="has-tabs-top">
+		<ion-list>
+			<ion-item 
+			ng-repeat="item in items" 
+			class="item-chat item-remove-animate item-avatar item-icon-right"
+			type="item-text-wrap"
+			href="#/app/chat/{{item.$value}}/{{users[item.$id].name}}">
+				<img ng-src="{{item.picture}}">
+				<h2>{{users[item.$id].name}}</h2>
+				<p ng-if="chats[item.$value].lastMessage.text">
+					<span ng-if="chats[item.$value].lastMessage.uid == uid">You</span>
+					<span ng-if="chats[item.$value].lastMessage.uid != uid">{{chats[item.$value].lastMessage.name}}</span>
+					: {{chats[item.$value].lastMessage.text}}
+				</p>
+				<span class="last-message-timestamp">{{chats[item.$value].lastMessage.time}}</span>
+				<i class="icon ion-chevron-right icon-accessory"></i>
+
+				<ion-option-button class="button-assertive" ng-click="remove(chat)">
+					Delete
+				</ion-option-button>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

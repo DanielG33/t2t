@@ -1,0 +1,40 @@
+<ion-view view-title="Public Chat">
+	<div class="tabs tabs-top" style="top: 0px;">
+		<a class="tab-item" href="#/app/privates">Private</a>
+		<a class="tab-item tab-item-active" href="#/app/public">Public</a>
+	</div>
+	<ion-content class="has-header">
+
+		<ion-scroll id="messages-container">
+			<div class="message" ng-repeat="message in messages" ng-class="{'message-in': message.uid != uid, 'message-out': message.uid == uid}">
+				<div class="message-content">
+					<div class="avatar-container">
+						<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png" ng-if="message.uid != uid">
+					</div>
+					<div class="text-container">
+						<span class="timestamp" ng-if="message.uid != uid" ng-click="showPopup(message.uid, message.name)">{{message.name}} |</span>
+						<span class="timestamp">{{message.time}}</span>
+						<pre ng-bind-html="message.text"></pre>
+					</div>
+				</div>
+			</div>
+			<div id="bottom"></div>
+		</ion-scroll>
+
+		<div id="message-input" class="item item-input-inset">
+			<label class="item-input-wrapper">
+				<textarea id="textarea" ng-model="data.message" placeholder="Share your trading thoughts and/or an article"></textarea>
+			</label>
+			<button class="button button-dark button-icon icon ion-paper-airplane" ng-click="sendMessage()"></button>
+		</div>
+	</ion-content>
+	<ion-tabs class="tabs-icon-top tabs-balanced">
+
+		<ion-tab title="Privates" icon="ion-chatboxes" href="#/app/privates">
+		</ion-tab>
+
+		<ion-tab title="Public" icon="ion-ios-people" href="#/app/public">
+		</ion-tab>
+
+	</ion-tabs>
+</ion-view>

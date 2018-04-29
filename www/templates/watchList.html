@@ -1,0 +1,142 @@
+<ion-view view-title="Stocks">
+	<div class="tabs tabs-top" style="top: 0px;">
+		<a class="tab-item tab-item-active" href="#/app/stocks">Stocks</a>
+		<a class="tab-item" href="#/app/crypto">Crypto</a>
+	</div>
+	<ion-content class="has-tabs-top">
+		<ion-list class="stocks">
+			<ion-item class="item-stock" ng-repeat="stock in stocks | limitTo : display | orderBy: filter.sortBy" ng-click="showDetails(stock.symbol)">
+				<div class="row">
+					<div class="col-10">
+						<span class="comunity-rating balanced">{{$index}}</span>
+					</div>
+					<div class="col col-70">
+						<h2 class="company-name">{{stock.symbol}} <br><small>{{stock.companyName | limitTo : 30}}</small></h2>
+					</div>
+					<div class="col col-20">
+						<span class="current-price">{{stock.latestPrice}}</span>
+						<br>
+						<span class="price-change" ng-class="{'balanced' : stock.changePercent > 0, 'assertive' : stock.changePercent < 0}">
+							<i class="ion-arrow-up-b" ng-if="stock.changePercent > 0"></i>
+							<i class="ion-arrow-down-b" ng-if="stock.changePercent < 0"></i>
+							{{stock.changePercent}}%
+						</span>
+					</div>
+				</div>
+				<!-- <ion-option-button class="button-assertive icon ion-ios-heart-outline"></ion-option-button> -->
+			</ion-item>
+
+			<button class="button button-block button-clear button-balanced" ng-click="showMore()">Show more...</button>
+		</ion-list>
+
+	<script id="stockDetails.html" type="text/ng-template">
+		<ion-modal-view class="modal-transparent" id="stockDetails">
+			<ion-header-bar class="bar-balanced">
+				<h1 class="title">Stock Details</h1>
+				<div class="buttons">
+					<button class="button button-icon icon" ng-class="{'ion-ios-heart': fav, 'ion-ios-heart-outline': !fav}" ng-click="add()"></button>
+					<button class="button button-balanced" ng-click="modal.hide()">Close</button>
+				</div>
+			</ion-header-bar>
+			<ion-content>
+				<div class="list card">
+					<div class="item item-text-wrap row">
+						<div class="col col-60">
+							<h2>{{stock.company.companyName}}</h2>
+							<p>{{stock.company.industry}}</p>
+						</div>
+						<div class="col col-40">
+							<h2> $209.29 </h2>
+							<h3>
+								<span class="price-change" ng-class="{'balanced' : stock.quote.changePercent > 0, 'assertive' : stock.quote.changePercent < 0}">
+									<i class="ion-arrow-up-b" ng-if="stock.quote.changePercent > 0"></i>
+									<i class="ion-arrow-down-b" ng-if="stock.quote.changePercent < 0"></i>
+									{{stock.quote.change}}% / {{stock.quote.changePercent}}
+								</span>
+							</h3>
+						</div>
+					</div>
+
+					<div class="item item-body">
+						<div class="row">
+							<div class="col">
+								<ion-list>
+									<ion-item>
+										<h4>Open</h4>
+										<span>{{stock.quote.open | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>Day High</h4>
+										<span>{{stock.chart.day.high | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>Day Low</h4>
+										<span>{{stock.chart.day.low | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>Latest Volume</h4>
+										<span>{{stock.quote.latestVolume | number}}</span>
+									</ion-item>
+								</ion-list>
+							</div>
+							<div class="col">
+								<ion-list>
+									<ion-item>
+										<h4>Close</h4>
+										<span>{{stock.quote.close | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>52Wk High</h4>
+										<span>{{stock.quote.week52High | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>52Wk Low</h4>
+										<span>{{stock.quote.week52Low | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>Avg Total Volume</h4>
+										<span>{{stock.quote.avgTotalVolume | number}}</span>
+									</ion-item>
+								</ion-list>
+							</div>
+						</div>
+					</div>
+					<div class="item inside-tabs row">
+						<div class="col">
+							<span>Rate</span>
+						</div>
+						<div class="col">
+							<span class="active">Company</span>
+						</div>
+						<div class="col">
+							<span class="">Financial</span>
+						</div>
+					</div>
+					<div class="item item-text-wrap">
+						<div id="stock-company">
+							<img ng-src="{{stock.logo}}" alt="{{stock.company.companyName}} Logo">
+							{{stock.company.description}} <br><br>
+							<p>{{stock.company.sector}} - {{stock.company.industry}}</p>
+							<p>
+								<a href="#">{{stock.company.website}}</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</ion-content>
+		</ion-modal-view>
+	</script>
+
+	<script id="settings.html" type="text/ng-template">
+		<ion-popover-view>
+			<ion-header-bar>
+				<h1 class="title">Filter / Sort</h1>
+			</ion-header-bar>
+			<ion-content>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat maxime minus facere cum, vero! Quaerat dolorum laboriosam nobis commodi eaque ratione, fugit consectetur eligendi fuga minima voluptatibus, suscipit animi ad.</p>
+			</ion-content>
+		</ion-popover-view>
+	</script>
+
+	</ion-content>
+</ion-view>

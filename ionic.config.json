@@ -1,9 +1,10 @@
 {
-  "name": "tradertotrader",
-  "app_id": "",
+  "name": "buildTest",
+  "app_id": "fabdb581",
   "type": "ionic1",
   "integrations": {
-    "gulp": {}
+    "gulp": {},
+    "cordova": {}
   },
   "watchPatterns": [
     "scss/**/*",

@@ -1,0 +1,69 @@
+<ion-view view-title="Playlist">
+	<ion-content id="profile">
+
+		<div class="user-info">
+			<div class="profile-image-wrapper">
+				<div class="profile-image">
+					<img src="https://i1.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?resize=256%2C256&quality=100" alt="">
+				</div>
+			</div>
+			<h3>Daniel Guzmán <small><i class="ion ion-ios-people"></i> 15</small></h3>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, excepturi quas natus velit.</p>
+			<div class="social">
+				<a class="button icon-left ion-social-facebook button-clear button-light">/DanielGuzman</a>
+				<a class="button icon-left ion-social-twitter button-clear button-light">@DanielGuzman</a>
+			</div>
+		</div>
+		<div class="user-data">
+			<div class="inside-tabs row" ng-init="tabs = 'personal'">
+				<div class="col">
+					<input type="radio" id="tab-personal" name="tabs" ng-model="tabs" value="personal">
+					<label for="tab-personal" class="">Personal</label>
+				</div>
+				<div class="col">
+					<input type="radio" id="tab-ratings" name="tabs" ng-model="tabs" value="ratings">
+					<label for="tab-ratings">Ratings</label>
+				</div>
+				<div class="col">
+					<input type="radio" id="tab-profile-comments" name="tabs" ng-model="tabs" value="profile-comments">
+					<label for="tab-profile-comments">Comments</label>
+				</div>
+				<div class="col">
+					<input type="radio" id="tab-watchlist" name="tabs" ng-model="tabs" value="watchlist">
+					<label for="tab-watchlist" class="">Watchlist</label>
+				</div>
+			</div>
+
+			<div class="item item-text-wrap inside-tab-content" ng-if="tabs == 'personal'">
+				<ion-list>
+					<ion-item class="item-input">
+						<label class="input-label">First Name</label>
+						<input type="text" value="Daniel">
+					</ion-item>
+					<ion-item class="item-input">
+						<label class="input-label">Last Name</label>
+						<input type="text" value="Guzmán">
+					</ion-item>
+					<ion-item class="item-input">
+						<label class="input-label">Email</label>
+						<input type="text" value="Danielguzman9633@gmail.com">
+					</ion-item>
+					<ion-item class="item-select">
+						<label class="input-label">Country</label>
+						<select name="" id="" class="select">
+							<option value="CO">Colombia</option>
+						</select>
+					</ion-item>
+					<ion-item class="item-select">
+						<label class="input-label">Trading Experience</label>
+						<select name="" id="" class="select">
+							<option value="CO">0-3 years</option>
+						</select>
+					</ion-item>
+				</ion-list>
+			</div>
+
+		</div>
+	
+	</ion-content>
+</ion-view>

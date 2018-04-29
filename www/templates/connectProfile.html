@@ -1,0 +1,83 @@
+<ion-view view-title="Profile">
+	<ion-header-bar class="bar-dark">
+		<button class="button button-clear button-light icon-left ion-ios-arrow-back" ng-click="goBack()">Connects</button>
+		<h1 class="title"></h1>
+	</ion-header-bar>
+	<ion-content>
+		<div id="popupTop"></div>
+		<div class="card profile">
+			<div class="item item-text-wrap avatar-container">
+				<div class="row">
+					<div class="col col-33">
+						<img src="http://pngimages.net/sites/default/files/user-png-image-54154.png" alt="avatar" class="avatar">
+					</div>
+					<div class="col">
+						<div class="row">
+							<h2>{{user.name}}</h2>
+						</div>
+						<div class="row">
+							<p>{{user.email}}</p>
+						</div>				
+						<div class="row">
+							<div class="col">
+								<i class="ion ion-chatbox-working"></i> {{user.commentedCount}}
+							</div>
+							<div class="col">
+								<i class="ion ion-heart"></i> {{user.watchlistCount}}
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<i class="ion ion-ios-people"></i> {{user.connectsCount}}
+							</div>
+							<div class="col">
+								<i class="ion ion-ios-star-half"></i> {{user.ratingsCount}}
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+			<div class="item item-divider">
+				Ratings
+			</div>
+			<div class="item row h-scroll">
+				<span ng-repeat="(key, value) in user.ratings">{{key}}: {{value}}</span>
+			</div>
+			<div class="item item-divider">
+				Watchlist
+			</div>
+			<div class="item row h-scroll">
+				<span ng-repeat="(key, value) in user.watchlist">{{key}}</span>
+			</div>
+			<div class="item item-divider">
+				Commented
+			</div>
+			<div class="item row h-scroll">
+				<span ng-repeat="(key, value) in user.comments" ng-click="showComments(key, value)">{{key}}</span>
+			</div>
+		</div>
+
+		<script id="comments.html" type="text/ng-template">
+			<ion-popover-view style="width: 80vw; height: 70vh;">
+				<ion-header-bar>
+					<h1 class="title">Comments</h1>
+					<button class="button close button-icon ion-close-round" ng-click="popover_comments.hide()"></button>
+				</ion-header-bar>
+				<ion-content>
+					
+					<div class="card" ng-repeat="comment in comments">
+						<div class="item item-avatar item-text-wrap">
+							<img ng-src="{{company.logo}}" alt="Logo">
+
+							<h2>{{company.name}}</h2>
+							<p>[Date], {{comment.time}}</p>
+							<hr>
+							<p>{{comment.content}}</p>
+						</div>
+					</div>
+
+				</ion-content>
+			</ion-popover-view>
+		</script>
+	</ion-content>
+</ion-view>

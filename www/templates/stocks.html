@@ -1,0 +1,381 @@
+<ion-view view-title="Stocks">
+	<div class="tabs tabs-top tabs-dark" style="top: 0px;">
+		<button class="button button-calm button-clear" ng-click="settings.show()">
+			<i class="ion-gear-b calm"></i>
+		</button>
+		<!-- <a class="tab-item"><i class="ion-gear-b calm"></i></a> -->
+		<a class="tab-item tab-item-active" href="#/app/stocks">Stocks</a>
+		<a class="tab-item" href="#/app/crypto">Crypto</a>
+	</div>
+	<ion-content class="has-tabs-top-and-search">
+		<ion-list class="stocks">
+			<ion-item class="item-stock" ng-repeat="stock in stocks | limitTo : display | orderBy: filter.sortBy" ng-click="showDetails(stock.symbol)">
+				<div class="row">
+					<div class="col-10">
+						<span
+						class="comunity-rating"
+						ng-if="ratings[stock.symbol].avg"
+						ng-class="{
+							'rate_1': (ratings[stock.symbol].avg / ratings[stock.symbol].qta) >= 1,
+							'rate_2': (ratings[stock.symbol].avg / ratings[stock.symbol].qta) >= 2,
+							'rate_3': (ratings[stock.symbol].avg / ratings[stock.symbol].qta) >= 3,
+							'rate_4': (ratings[stock.symbol].avg / ratings[stock.symbol].qta) >= 4,
+							'rate_5': (ratings[stock.symbol].avg / ratings[stock.symbol].qta) >= 4.6,
+						}">
+							{{ratings[stock.symbol].avg / ratings[stock.symbol].qta | number : 1}}
+						</span>
+						<span class="comunity-rating rate_0" ng-if="!ratings[stock.symbol].avg">-</span>
+					</div>
+					<div class="col col-70">
+						<h2 class="company-name">{{stock.symbol}} <br><small>{{stock.companyName | limitTo : 30}}</small></h2>
+					</div>
+					<div class="col col-20">
+						<span class="current-price">{{stock.latestPrice | currency}}</span>
+						<br>
+						<span class="price-change" ng-class="{'balanced' : stock.changePercent > 0, 'assertive' : stock.changePercent < 0}">
+							<i class="ion-arrow-up-b" ng-if="stock.changePercent > 0"></i>
+							<i class="ion-arrow-down-b" ng-if="stock.changePercent < 0"></i>
+							{{stock.changePercent * 100 | number : 2}}%
+						</span>
+					</div>
+				</div>
+			</ion-item>
+
+			<button class="button button-block button-clear button-light" ng-click="showMore()">Show more...</button>
+		</ion-list>
+
+	<script id="stockDetails.html" type="text/ng-template">
+		<ion-modal-view class="modal-transparent" id="stockDetails">
+			<ion-header-bar class="bar-dark">
+				<h1 class="title">Stock Details</h1>
+				<div class="buttons">
+					<button class="button button-assertive button-clear button-icon icon" ng-class="{'ion-ios-heart': fav, 'ion-ios-heart-outline': !fav}" ng-click="add()"></button>
+					<button class="button button-light" ng-click="modal.hide()">Close</button>
+				</div>
+			</ion-header-bar>
+			<ion-content>
+				<div class="list card">
+					<div class="item item-text-wrap row">
+						<div class="col col-60">
+							<h2>{{stock.company.companyName}}</h2>
+							<p>{{stock.company.industry}}</p>
+						</div>
+						<div class="col col-40">
+							<h2> {{stock.quote.latestPrice | currency}} </h2>
+							<h3>
+								<span class="price-change" ng-class="{'balanced' : stock.quote.changePercent > 0, 'assertive' : stock.quote.changePercent < 0}">
+									<i class="ion-arrow-up-b" ng-if="stock.quote.changePercent > 0"></i>
+									<i class="ion-arrow-down-b" ng-if="stock.quote.changePercent < 0"></i>
+									{{stock.quote.change}} / {{stock.quote.changePercent * 100 | number : 2}}%
+								</span>
+							</h3>
+							<h3>Rating: {{ratings[stock.company.symbol].avg / ratings[stock.company.symbol].qta | number : 1}}</h3>
+							<!-- <h3>{{ratingScore}} - {{ratingsArray.length}}</h3> -->
+						</div>
+					</div>
+
+					<div class="item item-body">
+						<div class="row">
+							<div class="col">
+								<ion-list>
+									<ion-item>
+										<h4>Open</h4>
+										<span>{{stock.quote.open | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>high</h4>
+										<span>{{stock.quote.high | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>Low</h4>
+										<span>{{stock.quote.low | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>52 WK High</h4>
+										<span>{{stock.quote.week52High | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>52 WK Low</h4>
+										<span>{{stock.quote.week52Low | number}}</span>
+									</ion-item>
+								</ion-list>
+							</div>
+							<div class="col">
+								<ion-list>
+									<ion-item>
+										<h4>Volume</h4>
+										<span>{{stock.quote.latestVolume | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>Avg Vol</h4>
+										<span>{{stock.quote.avgTotalVolume | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>MKT Cap</h4>
+										<span>{{stock.quote.marketCap | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>P/E Ratio</h4>
+										<span>{{stock.quote.peRatio | number}}</span>
+									</ion-item>
+									<ion-item>
+										<h4>Div Yield</h4>
+										<span>{{stock.stats.dividendYield | number}}</span>
+									</ion-item>
+								</ion-list>
+							</div>
+						</div>
+					</div>
+					<div class="item inside-tabs row" ng-init="tabs = 'company'">
+						<div class="col">
+							<input type="radio" id="tab-comments" name="tabs" ng-model="tabs" value="comments">
+							<label for="tab-comments">Comments</label>
+						</div>
+						<div class="col">
+							<input type="radio" id="tab-rating" name="tabs" ng-model="tabs" value="rating">
+							<label for="tab-rating">Rate</label>
+						</div>
+						<div class="col">
+							<input type="radio" id="tab-company" name="tabs" ng-model="tabs" value="company">
+							<label for="tab-company" class="active">Company</label>
+						</div>
+						<div class="col">
+							<input type="radio" id="tab-financial" name="tabs" ng-model="tabs" value="financial">
+							<label for="tab-financial" class="">Financial</label>
+						</div>
+						<div class="col">
+							<input type="radio" id="tab-charts" name="tabs" ng-model="tabs" value="charts">
+							<label for="tab-charts" class="">Charts</label>
+						</div>
+					</div>
+
+					<div class="item item-text-wrap inside-tab-content" id="stock-comments" ng-if="tabs == 'comments'">
+						<ion-scroll class="comments-container">
+
+							<p ng-repeat="comment in comments">
+								{{comment.name}}: 
+								<i class="ion-star" ng-if="comment.rating > 0"></i>
+								<i class="ion-star" ng-if="comment.rating > 1"></i>
+								<i class="ion-star" ng-if="comment.rating > 2"></i>
+								<i class="ion-star" ng-if="comment.rating > 3"></i>
+								<i class="ion-star" ng-if="comment.rating > 4"></i>
+								<span>{{comment.content}}</span>
+							</p>
+
+							<div id="bottom"></div>
+						</ion-scroll>
+						<div class="comments-write">
+							<div class="item item-input-inset">
+								<label class="item-input-wrapper">
+									<textarea rows="2" ng-model="data.newComment"></textarea>
+								</label>
+								<button class="button button-small" ng-click="sendComment()">
+									Submit
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="item item-text-wrap inside-tab-content" id="stock-rating" ng-if="tabs == 'rating'">
+						<div class="row">
+							<div class="col col-80 col-offset-10
+							">
+								<ul class="range-labels">
+									<li>1</li>
+									<li>2</li>
+									<li>3</li>
+									<li>4</li>
+									<li>5</li>
+								</ul>
+								<div class="range">
+									<input type="range" ng-model="rating.stars" min="1" max="5" step="1">
+								</div>
+								<div class="ratingStars">
+									<h3>{{ratingText[rating.stars-1]}}</h3>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<h2>Reason for rating</h2>
+								<textarea style="width: 100%" rows="3" ng-model="rating.comment" placeholder="Explain your rating by linking to a website, detailing an analysis, or by explaining sentiment..."></textarea>
+							</div>
+						</div>
+						<div class="row" style="text-align: right;">
+							<div class="col">
+								<button class="button button-balanced button-clear button-icon icon ion-checkmark-circled" ng-click="rate()"></button>
+							</div>
+						</div>
+					</div>
+
+					<div class="item item-text-wrap inside-tab-content" id="stock-company" ng-if="tabs == 'company'">
+						<img ng-src="{{stock.logo}}" alt="{{stock.company.companyName}} Logo">
+						{{stock.company.description}} <br><br>
+						<p>{{stock.company.sector}} - {{stock.company.industry}}</p>
+						<p>
+							<a href="#">{{stock.company.website}}</a>
+						</p>
+					</div>
+
+					<div class="item item-text-wrap inside-tab-content" id="stock-financials" ng-if="tabs == 'financial'" ng-init="report = 0">
+						<h4>Report Date: {{stock.financials[report].reportDate}}</h4>
+						<div class="row">
+							<div class="col col-10">
+								<label>
+									<input type="radio" name="report" ng-model="report" value="0" ng-value="0">
+									<i class="ion-android-radio-button-on positive" ng-if="report == 0"></i>
+									<i class="ion-android-radio-button-off" ng-if="report != 0"></i>
+								</label>
+								<label>
+									<input type="radio" name="report" ng-model="report" value="1" ng-value="1">
+									<i class="ion-android-radio-button-on positive" ng-if="report == 1"></i>
+									<i class="ion-android-radio-button-off" ng-if="report != 1"></i>
+								</label>
+								<label>
+									<input type="radio" name="report" ng-model="report" value="2" ng-value="2">
+									<i class="ion-android-radio-button-on positive" ng-if="report == 2"></i>
+									<i class="ion-android-radio-button-off" ng-if="report != 2"></i>
+								</label>
+								<label>
+									<input type="radio" name="report" ng-model="report" value="3" ng-value="3">
+									<i class="ion-android-radio-button-on positive" ng-if="report == 3"></i>
+									<i class="ion-android-radio-button-off" ng-if="report != 3"></i>
+								</label>
+							</div>
+							<div class="col">
+								<ion-list>
+									<ion-item>
+										<h5>Cash Change</h5>
+										<p>{{stock.financials[report].cashChange | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Cost of Revenue</h5>
+										<p>{{stock.financials[report].costOfRevenue | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Current Cash</h5>
+										<p>{{stock.financials[report].currentCash | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Gross Profit</h5>
+										<p>{{stock.financials[report].grossProfit | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Op. Expenses</h5>
+										<p>{{stock.financials[report].operatingExpense | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Op. Income</h5>
+										<p>{{stock.financials[report].operatingIncome | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Research & Dev</h5>
+										<p>{{stock.financials[report].researchAndDevelopment | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Total Assets</h5>
+										<p>{{stock.financials[report].totalAssets | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Total Debt</h5>
+										<p>{{stock.financials[report].totalDebt | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Total Revenue</h5>
+										<p>{{stock.financials[report].totalRevenue | currency}}</p>
+									</ion-item>
+								</ion-list>
+							</div>
+							<div class="col">
+								<ion-list>
+									<ion-item>
+										<h5>Cash Flow</h5>
+										<p>{{stock.financials[report].cashFlow | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Current Assets</h5>
+										<p>{{stock.financials[report].currentAssets | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Current Debt</h5>
+										<p>{{stock.financials[report].currentDebt | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Net Income</h5>
+										<p>{{stock.financials[report].netIncome | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Op. Gain Losses</h5>
+										<p>{{stock.financials[report].OperatingGainLosses | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Op. Revenue</h5>
+										<p>{{stock.financials[report].operatingRevenue | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Shareholder Equity</h5>
+										<p>{{stock.financials[report].shareholderEquity | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Current</h5>
+										<p>{{stock.financials[report].currentCash | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Total Cash</h5>
+										<p>{{stock.financials[report].totalCash | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Total Liabilities</h5>
+										<p>{{stock.financials[report].totalLiabilities | currency}}</p>
+									</ion-item>
+								</ion-list>
+							</div>
+						</div>
+					</div>
+
+					<div class="item item-text-wrap inside-tab-content" id="stock-charts" ng-if="tabs == 'charts'">
+						<canvas id="line" class="chart chart-line" chart-data="points" chart-labels="labels" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+					</div>
+
+				</div>
+			</ion-content>
+		</ion-modal-view>
+	</script>
+
+	<script id="settings.html" type="text/ng-template">
+		<ion-modal-view class="modal-transparent modal-settings" id="stockDetails">
+			<ion-header-bar class="bar-dark">
+				<h1 class="title">Settings</h1>
+				<div class="buttons">
+					<button class="button button-balanced button-clear button-icon icon ion-checkmark-circled" ng-click="filterStocks(); settings.hide()"></button>
+					<button class="button button-light" ng-click="settings.hide()">Close</button>
+				</div>
+			</ion-header-bar>
+			<ion-content>
+				<div class="list card">
+					<div class="item item-divider">
+						<h2>Search by</h2>
+					</div>
+					<label class="item item-input">
+						<span class="input-label">Symbol</span>
+						<input type="text" ng-model="data.filter1" ng-change="data.filtered = (symbols | filter : {'symbol': data.filter1, 'name': data.filter2})">
+					</label>
+					<label class="item item-input">
+						<span class="input-label">Name</span>
+						<input type="text" ng-model="data.filter2" ng-change="data.filtered = (symbols | filter : {'symbol': data.filter1, 'name': data.filter2})">
+					</label>
+				</div>
+				<div class="list card">
+					<div class="item item-divider">
+						<h2>Sort by</h2>
+					</div>
+					<ion-radio ng-model="sortStock" ng-value="symbol">Symbol</ion-radio>
+					<ion-radio ng-model="sortStock" ng-value="mostRatedEver">Most rated ever</ion-radio>
+					<ion-radio ng-model="sortStock" ng-value="mostRatedToday">Most rated today</ion-radio>
+				</div>
+			</ion-content>
+		</ion-modal-view>
+	</script>
+
+	</ion-content>
+</ion-view>
