@@ -21,16 +21,8 @@ navigation history that also transitions its views in and out.
     <ion-nav-view name="app-connects"></ion-nav-view>
   </ion-tab>
 
-
-  <ion-tab style="visibility: hidden; display: none;">
-    <ion-nav-view name="app-more"></ion-nav-view>
+  <ion-tab title="Profile" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/app/profile">
+    <ion-nav-view name="app-profile"></ion-nav-view>
   </ion-tab>
-
-
-  <a href="javascript:void(0)" class="tab-item" style="position: fixed; right: 0px; width: 20%;" ng-click="openMore()">
-    <i class="icon ion-more"></i>
-    <span class="tab-title">More</span>
-  </a>
-
 
 </ion-tabs>

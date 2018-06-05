@@ -20,19 +20,23 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'ngSanit
 			// org.apache.cordova.statusbar required
 			StatusBar.styleDefault();
 		}
+
+		// window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
+		
+		// var notificationOpenedCallback = function(jsonData) {
+		// 	console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+		// };
+
+		// window.plugins.OneSignal
+		// .startInit("1caec118-7d90-4a79-b810-72be44e9d3ea")
+		// .handleNotificationOpened(notificationOpenedCallback)
+		// .endInit();
 	});
 })
 
 .config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
 
-	// Ionic uses AngularUI Router which uses the concept of states
-	// Learn more here: https://github.com/angular-ui/ui-router
-	// Set up the various states which the app can be in.
-	// Each state's controller can be found in controllers.js
-
-	// Place tabs at bottom
 	$ionicConfigProvider.tabs.position('bottom');
-
 	$ionicConfigProvider.views.transition('none');
 
 	// Firebase config
@@ -45,14 +49,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'ngSanit
 		messagingSenderId: "1089293620029"
 	};
 	firebase.initializeApp(config);
-
-	// messaging.requestPermission().then(function() {
-	// 	console.log('Notification permission granted.');
-	// 	// TODO(developer): Retrieve an Instance ID token for use with FCM.
-	// 	// ...
-	// }).catch(function(err) {
-	// 	console.log('Unable to get permission to notify.', err);
-	// });
 
 	$stateProvider
 
@@ -83,6 +79,16 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'ngSanit
 		reload: false
 	})
 
+	.state('app.stockDetails', {
+		url: '/stockDetails/:symbol',
+		views: {
+			'app-stocks': {
+				templateUrl: 'templates/stockDetails.html',
+				controller: 'stockDetailsCtrl'
+			}
+		}
+	})
+
 	.state('app.crypto', {
 		url: '/crypto',
 		views: {
@@ -90,6 +96,16 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'ngSanit
 				templateUrl: 'templates/crypto.html',
 				controller: 'cryptoCtrl',
 				cache: true
+			}
+		}
+	})
+
+	.state('app.cryptoDetails', {
+		url: '/cryptoDetails/:symbol',
+		views: {
+			'app-stocks': {
+				templateUrl: 'templates/cryptoDetails.html',
+				controller: 'cryptoDetailsCtrl'
 			}
 		}
 	})
@@ -118,9 +134,9 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'ngSanit
 	.state('app.profile', {
 		url: '/profile',
 		views:{
-			'app-more': {
-				templateUrl: 'templates/profile.html'
-				// controller: 'connectsCtrl'
+			'app-profile': {
+				templateUrl: 'templates/profile.html',
+				controller: 'profileCtrl'
 			}
 		}
 	})
@@ -130,7 +146,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'ngSanit
 		views:{
 			'app-connects': {
 				templateUrl: 'templates/connectProfile.html',
-				controller: 'connectProfileCtrl'
+				controller: 'profileCtrl'
 			}
 		}
 	})

@@ -2,73 +2,24 @@ angular.module('starter.controllers', [])
 
 .controller('tabsCtrl', function($scope, $ionicActionSheet, $firebaseAuth, $location) {
 
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-  var authObj = $firebaseAuth();
-
- 	$scope.openMore = function() {
-
-		var actionSheet = $ionicActionSheet.show({
-			buttons: [
-				{ text: 'Profile (template)' },
-				{ text: 'Log Out' }
-			],
-			// titleText: 'Brandon Gray',
-			cancelText: 'Cancel',
-			cancel: function() {
-				// add cancel code..
-			},
-			buttonClicked: function(index) {
-				console.log(index);
-				if(index == 0){
-					$location.path('/app/profile');
-				}
-				if (index == 1) {
-					$location.path('/login');
-				}
-				return true;
-			}
-		});
-	}
-
-	// authObj.$onAuthStateChanged(function(firebaseUser) {
-	// 	console.log(firebaseUser);
-	// })
-
+	// With the new view caching in Ionic, Controllers are only called
+	// when they are recreated or on app start, instead of every page change.
+	// To listen for when this page is active (for example, to refresh data),
+	// listen for the $ionicView.enter event:
+	//$scope.$on('$ionicView.enter', function(e) {
+	//});
 })
 
 .controller('loginCtrl', function($scope, $location, $ionicModal, $firebaseAuth) {
 
-	// messaging.requestPermission().then(function() {
-	// 	console.log('Notification permission granted.');
-	// 	// TODO(developer): Retrieve an Instance ID token for use with FCM.
-	// 	// ...
-	// }).catch(function(err) {
-	// 	console.log('Unable to get permission to notify.', err);
-	// });
-
+	$scope.openBrowser = function(link){
+		cordova.InAppBrowser.open(link,'_blank','location=yes'); 
+	};
+	
 	$scope.$on('$ionicView.enter', function(e) {
 		var authObj = $firebaseAuth();
 		authObj.$signOut();
 	});
-
-	$scope.callFCM = function(){
-		FCMPlugin.getToken(
-			function (token) {
-				alert('Token: ' + token);
-				console.log('Token: ' + token);
-			},
-			function (err) {
-				alert('error retrieving token: ' + token);
-				console.log('error retrieving token: ' + err);
-			}
-		);
-	}
 
 	$scope.loginData = {};
 	$scope.signupData = {};
@@ -124,42 +75,6 @@ angular.module('starter.controllers', [])
 	}).then(function(modal) {
 		$scope.modal = modal;
 	});
-
-
-	$scope.send = function(){
-		//FCMPlugin.subscribeToTopic( topic, successCallback(msg), errorCallback(err) );
-		//All devices are subscribed automatically to 'all' and 'ios' or 'android' topic respectively.
-		//Must match the following regular expression: "[a-zA-Z0-9-_.~%]{1,900}".
-		// FCMPlugin.subscribeToTopic('all');
-
-		$http({
-			method: "POST",
-			dataType: 'jsonp',
-			headers: {'Content-Type': 'application/json', 'Authorization': 'key=AIzaSyB3BQ2XI8ZGG2sE-ELiWF3E7brO9WFCv5E'},
-			url: "https://fcm.googleapis.com/fcm/send",
-			data: JSON.stringify({
-					"notification":{
-						"title":"T2T Test Notification",  //Any value
-						"body": 'Test Message Body',  //Any value
-						"sound": "default", //If you want notification sound
-						"click_action": "FCM_PLUGIN_ACTIVITY",  //Must be present for Android
-						"icon": "fcm_push_icon"  //White icon Android resource
-					},
-					"data":{
-						"param1":"value1",  //Any data to be retrieved in the notification callback
-						"param2": 'Test Message Body'
-					},
-					// "to":"/topics/all", //Topic or single device
-					"priority":"high", //If not set, notification won't be delivered on completely closed iOS app
-					"restricted_package_name":"" //Optional. Set for application filtering
-			})
-		}).success(function(data){
-			$scope.reply = 'Test Message Body';
-			alert("Success: " + JSON.stringify(data));
-		}).error(function(data){
-			alert("Error: " + JSON.stringify(data));
-		});
-	}
 })
 
 .controller('stocksCtrl', function($scope, $location, $anchorScroll, $http, $ionicModal, $ionicPopover, $firebaseArray, $firebaseObject, $firebaseAuth) {
@@ -170,8 +85,8 @@ angular.module('starter.controllers', [])
 	var date = new Date();
 	var date = String(date.getFullYear()) + String(date.getMonth()+1) + String(date.getDate());
 
-  $scope.ratingText = ['Short', 'Sell', 'Hold', 'Buy', 'Strong Buy'];
-  $scope.rating = {};
+	$scope.ratingText = ['Short', 'Sell', 'Hold', 'Buy', 'Strong Buy'];
+	$scope.rating = {};
 
 	var ratings = firebase.database().ref('ratings/');
 		ratings = $firebaseObject(ratings);
@@ -191,14 +106,14 @@ angular.module('starter.controllers', [])
 		}
 	})
 
-  $scope.data = {};
-  $scope.filtered = {};
+	$scope.data = {};
+	$scope.filtered = {};
 	$scope.fav = false;
-  $scope.stocks = [];
-  $scope.ratings = [];
-  $scope.symbols = [];
-  $scope.display = 19;
-  var stocks;
+	$scope.stocks = [];
+	// $scope.ratings = [];
+	$scope.symbols = [];
+	$scope.display = 19;
+	var stocks;
 
   $scope.data.filtered = [];
 
@@ -286,93 +201,92 @@ angular.module('starter.controllers', [])
 
   $scope.showDetails = function(symbol){
 
-		$scope.comments = [];
+  	$location.path('/app/stockDetails');
 
-		var fav = firebase.database().ref('users/'+uid+'/watchlist/'+symbol);
-		fav.on("value", function(snapshot) {
-			$scope.fav = snapshot.val();
-		})
+		// $scope.comments = [];
 
-		var comments = firebase.database().ref('comments/'+symbol);
-    $scope.commentsArray = $firebaseArray(comments);
+		// var fav = firebase.database().ref('users/'+uid+'/watchlist/'+symbol);
+		// fav.on("value", function(snapshot) {
+		// 	$scope.fav = snapshot.val();
+		// })
 
-		$scope.commentsArray.$loaded().then(function(){
-			$location.hash('bottom');
-		})
+		// var comments = firebase.database().ref('comments/'+symbol);
+		// $scope.commentsArray = $firebaseArray(comments);
 
-		$scope.commentsArray.$watch(function(){
-			$scope.comments = $scope.commentsArray;
-			$anchorScroll();
-		})
+		// $scope.commentsArray.$loaded().then(function(){
+		// 	$location.hash('bottom');
+		// })
 
-    var ratings = firebase.database().ref('ratings/'+symbol);
-    $scope.ratingsArray = $firebaseArray(ratings);
+		// $scope.commentsArray.$watch(function(){
+		// 	$scope.comments = $scope.commentsArray;
+		// 	$anchorScroll();
+		// })
 
-    $scope.ratingsArray.$watch(function(){
-      $scope.ratingScore = 0;
-      $scope.ratingsArray.forEach(function (obj) {
-        $scope.ratingScore += obj.$value;
-      })
-    })
+  //   var ratings = firebase.database().ref('ratings/'+symbol);
+  //   $scope.ratingsArray = $firebaseArray(ratings);
 
-
-    $scope.ratingsArray.$loaded().then(function(){
-    	// console.log($scope.ratingsArray.$getRecord(uid));
-			if($scope.ratingsArray.$getRecord(uid)){
-				$scope.rating.stars = $scope.ratingsArray.$getRecord(uid).$value;
-			}else{
-				$scope.rating.stars = 5;
-			}
-    })
-
-		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/company').then(function(res){
-			$scope.stock.company = res.data;
-		});
-		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/quote').then(function(res){
-			$scope.stock.quote = res.data;
-		});
-		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/stats').then(function(res){
-			$scope.stock.stats = res.data;
-		});
-		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/previous').then(function(res){
-			$scope.stock.previous = res.data;
-		});
-		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/financials').then(function(res){
-			$scope.stock.financials = res.data.financials;
-		});
-		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/logo').then(function(res){
-			$scope.stock.logo = res.data.url;
-		});
-
-    // First check if there's any daya for "today". If not, print the last day data
-    $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/chart/1d').then(function(res){
-      $scope.points = [];
-
-      $scope.stock.chart.day = res.data;
-
-      var high = [],
-          low = [],
-          labels = [];
-
-      for (var i = 0; i <= res.data.length - 1; i += 5) {
-        $scope.points.push(res.data[i].average);
-        labels.push('');
-      }
-
-      $scope.labels = labels;
-      $scope.datasetOverride = {
-        fill: false,
-        borderWidth: 2,
-        borderColor: '#f2f2f2',
-        pointRadius: 0,
-        borderJoinStyle: 'miter',
-        borderCapStyle: 'square'
-      };
+  //   $scope.ratingsArray.$watch(function(){
+  //     $scope.ratingScore = 0;
+  //     $scope.ratingsArray.forEach(function (obj) {
+  //       $scope.ratingScore += obj.$value;
+  //     })
+  //   })
 
 
-    });
+  //   $scope.ratingsArray.$loaded().then(function(){
+  //   	// console.log($scope.ratingsArray.$getRecord(uid));
+		// 	if($scope.ratingsArray.$getRecord(uid)){
+		// 		$scope.rating.stars = $scope.ratingsArray.$getRecord(uid).$value;
+		// 	}else{
+		// 		$scope.rating.stars = 5;
+		// 	}
+  //   })
 
-    $scope.modal.show();
+		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/company').then(function(res){
+		// 	$scope.stock.company = res.data;
+		// });
+		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/quote').then(function(res){
+		// 	$scope.stock.quote = res.data;
+		// });
+		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/stats').then(function(res){
+		// 	$scope.stock.stats = res.data;
+		// });
+		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/previous').then(function(res){
+		// 	$scope.stock.previous = res.data;
+		// });
+		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/financials').then(function(res){
+		// 	$scope.stock.financials = res.data.financials;
+		// });
+		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/logo').then(function(res){
+		// 	$scope.stock.logo = res.data.url;
+		// });
+		// // First check if there's any daya for "today". If not, print the last day data
+		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/chart/1d').then(function(res){
+		//   $scope.points = [];
+
+		//   $scope.stock.chart.day = res.data;
+
+		//   var high = [],
+		//       low = [],
+		//       labels = [];
+
+		//   for (var i = 0; i <= res.data.length - 1; i += 5) {
+		//     $scope.points.push(res.data[i].average);
+		//     labels.push('');
+		//   }
+
+		//   $scope.labels = labels;
+		//   $scope.datasetOverride = {
+		//     fill: false,
+		//     borderWidth: 2,
+		//     borderColor: '#f2f2f2',
+		//     pointRadius: 0,
+		//     borderJoinStyle: 'miter',
+		//     borderCapStyle: 'square'
+		//   };
+		// });
+
+  //   $scope.modal.show();
   }
 
 	$scope.add = function(){
@@ -412,41 +326,6 @@ angular.module('starter.controllers', [])
 		});
 	}
 
-	$scope.rate = function(){
-		var symbol = $scope.stock.company.symbol;
-		var score = firebase.database().ref('ratings/'+symbol+'/'+date+'/'+uid);
-		var rates = firebase.database().ref('ratings/'+symbol);
-
-		var avg, qta;
-
-		rates.on("value", function(snapshot) {
-			if(snapshot.val()){
-				avg = snapshot.val().avg;
-				qta = snapshot.val().qta;
-			}else{
-				avg = 0;
-        qta = 0;
-			}
-		})
-
-		score.on("value", function(snapshot) {
-			if(avg < 1){
-				rates.child('avg').set(parseInt($scope.rating.stars));
-				rates.child('qta').set(1);
-			}else{
-				if(snapshot.val()){
-					console.log(snapshot.val());
-					rates.child('avg').set(avg + parseInt($scope.rating.stars - snapshot.val()));
-				}else{
-					rates.child('avg').set(avg + parseInt($scope.rating.stars));
-					rates.child('qta').set(qta + 1);
-				}
-			}
-			score.set(parseInt($scope.rating.stars));
-		})
-		$scope.sendComment($scope.rating.stars, $scope.rating.comment);
-	}
-
 	$ionicModal.fromTemplateUrl('stockDetails.html', {
 		scope: $scope,
 		animation: 'slide-in-up'
@@ -459,6 +338,350 @@ angular.module('starter.controllers', [])
 		animation: 'slide-in-up'
 	}).then(function(modal) {
 		$scope.settings = modal;
+	});
+})
+
+.controller('stockDetailsCtrl', function($scope, $stateParams, $ionicHistory, $filter, $http, $firebaseArray, $firebaseObject, $firebaseAuth, $ionicModal){
+
+	$scope.goBack = function(){
+		$ionicHistory.goBack();
+	}
+
+	$scope.openBrowser = function(link){
+		cordova.InAppBrowser.open(link,'_blank','location=yes'); 
+	};
+
+	var symbol = $stateParams.symbol;
+
+	var authObj = $firebaseAuth();
+	var uid;
+	var date = new Date();
+	var date = String(date.getFullYear()) + String(date.getMonth()+1) + String(date.getDate());
+
+	$scope.ratingText = ['Short', 'Sell', 'Hold', 'Buy', 'Strong Buy'];
+
+	authObj.$onAuthStateChanged(function(firebaseUser) {
+		if (firebaseUser) {
+			uid = firebaseUser.uid;
+		} else {
+			console.log("Signed out");
+		}
+	})
+
+	$scope.rating = {
+		stars: 5,
+		comment: '',
+		chart: [0, 0, 0, 0, 0]
+	};
+
+	authObj.$onAuthStateChanged(function(firebaseUser) {
+		if (firebaseUser) {
+			uid = firebaseUser.uid;
+			var user = firebase.database().ref('users/'+uid+'/name');
+			user.on("value", function(snapshot) {
+				name = snapshot.val();
+			})
+			var fav = firebase.database().ref('users/'+uid+'/watchlist/stocks/'+symbol);
+			fav.on("value", function(snapshot) {
+				$scope.fav = snapshot.val();
+			})
+		}
+	})
+
+	$scope.chart = {
+		data: [],
+		labels: [],
+		range: '1d',
+		shownItems: 10,
+		shownRange: 0,
+		ranges: [
+			'1d',
+			'1m',
+			'3m',
+			'6m',
+			'ytd',
+			'1y',
+			'2y',
+			'5y'
+		],
+		points: {},
+		series: [
+			'High',
+			'Low',
+			'Open',
+			'Close'
+		],
+		rangeLabels: {
+			'1d': [],
+			'1m': [],
+			'3m': [],
+			'6m': [],
+			'ytd': [],
+			'1y': [],
+			'2y': [],
+			'5y': []
+		},
+		datasetOverride: [
+			{
+				fill: false,
+				borderWidth: 1,
+				// borderColor: '#f2f2f2',
+				pointRadius: 1
+			},
+			{
+				fill: false,
+				borderWidth: 1,
+				// borderColor: '#f2f2f2',
+				pointRadius: 1
+			},
+			{
+				fill: false,
+				borderWidth: 1,
+				// borderColor: '#f2f2f2',
+				pointRadius: 1
+			},
+			{
+				fill: false,
+				borderWidth: 1,
+				// borderColor: '#f2f2f2',
+				pointRadius: 1
+			}
+		]
+		,
+		options: {
+			animation: {
+				duration: 0
+			},
+			scales: {
+				yAxes: [{
+					stacked: false,
+					display: true
+				}],
+				xAxes: [{
+					stacked: false,
+					display: true
+				}]
+			},
+			legend: {
+				display: true,
+				labels: {
+					boxWidth: 20,
+					fontColor: '#f2f2f2'
+				}
+			}
+		}
+	};
+
+	for (var i = 0; i <= $scope.chart.ranges.length - 1; i++) {
+		getData($scope.chart.ranges[i]);
+	}
+	
+	$scope.showData = function(range){
+		if(range){
+			$scope.chart.range = range;
+		}else{
+			range = $scope.chart.range;
+		}
+
+		if($scope.chart.shownRange >= $scope.chart.rangeLabels[$scope.chart.range].length - $scope.chart.shownItems){
+			$scope.chart.shownRange = $scope.chart.rangeLabels[$scope.chart.range].length - $scope.chart.shownItems;
+		}
+
+		$scope.chart.data[0] = $filter('limitTo')($scope.chart.points[range][0], $scope.chart.shownItems, $scope.chart.shownRange);
+		$scope.chart.data[1] = $filter('limitTo')($scope.chart.points[range][1], $scope.chart.shownItems, $scope.chart.shownRange);
+		$scope.chart.data[2] = $filter('limitTo')($scope.chart.points[range][2], $scope.chart.shownItems, $scope.chart.shownRange);
+		$scope.chart.data[3] = $filter('limitTo')($scope.chart.points[range][3], $scope.chart.shownItems, $scope.chart.shownRange);
+		// $scope.chart.data = $scope.chart.points[range];
+		$scope.chart.labels = $filter('limitTo')($scope.chart.rangeLabels[range], $scope.chart.shownItems, $scope.chart.shownRange);
+
+		// console.log($scope.chart.shownItems, $scope.chart.shownRange);
+		// console.log($scope.chart.points[range]);
+	}
+
+	$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/company').then(function(res){
+		$scope.company = res.data;
+	});
+	$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/quote').then(function(res){
+		$scope.quote = res.data;
+	});
+	$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/stats').then(function(res){
+		$scope.stats = res.data;
+	});
+
+	var comments = firebase.database().ref('comments/'+symbol);
+	comments = $firebaseArray(comments);
+
+	comments.$watch(function(){
+		$scope.comments = comments;
+	})
+
+	var rates = firebase.database().ref('ratings/'+symbol+'/'+date);
+	rates = $firebaseArray(rates);
+
+	rates.$watch(function(){
+		// $scope.rating.chart = [0, 0, 0, 0, 0];
+		rates.forEach(function (obj) {
+			$scope.rating.chart[obj.$value - 1] ++;
+			console.log($scope.rating.chart);
+		})
+	})
+
+	function getData(index){
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/chart/'+index).then(function(res){
+			var high = [], low = [], open = [], close = [];
+			for (var x = 0; x <= res.data.length - 1; x ++) {
+				high.push(res.data[x].high);
+				low.push(res.data[x].low);
+				open.push(res.data[x].open);
+				close.push(res.data[x].close);
+				$scope.chart.rangeLabels[index].push(res.data[x].label);
+			}
+			$scope.chart.points[index] = [high, low];
+			if(open){
+				$scope.chart.points[index].push(open);
+				$scope.chart.points[index].push(close);
+			}
+			if(index == '1d'){
+				$scope.showData('1d');
+			}
+		});
+	}
+
+	$scope.add = function(){
+		var fav = firebase.database().ref('users/'+uid+'/watchlist/stocks/'+symbol);
+		fav.set(!$scope.fav);
+	}
+
+	$scope.rate = function(){
+		var score = firebase.database().ref('ratings/'+symbol+'/'+date+'/'+uid);
+		var rates = firebase.database().ref('ratings/'+symbol);
+		var rate_avg = firebase.database().ref('ratings/'+symbol+'/avg');
+		var rate_qta = firebase.database().ref('ratings/'+symbol+'/qta');
+
+		// rate_avg.set('rate_avg');
+
+		var avg = 0, qta = 0;
+
+		rates.on("value", function(snapshot) {
+			if(snapshot.val()){
+				avg = snapshot.val().avg;
+				qta = snapshot.val().qta;
+			}
+		})
+
+		score.on("value", function(snapshot) {
+			if(avg < 1){
+				rate_avg.set(parseInt($scope.rating.stars));
+				rate_qta.set(1);
+			}else{
+				if(snapshot.val()){
+					rate_avg.set(avg + parseInt($scope.rating.stars - snapshot.val()));
+				}else{
+					rate_avg.set(avg + parseInt($scope.rating.stars));
+					rate_qta.set(qta + 1);
+				}
+			}
+			score.set(parseInt($scope.rating.stars));
+		})
+		$scope.sendComment($scope.rating.stars, $scope.rating.comment);
+	}
+
+	$scope.sendComment = function(rating, reason){
+		var time = new Date();
+		time = time.getHours()+':'+time.getMinutes();
+
+		var newComment = {
+			time: time,
+			user: uid,
+			name: name
+		}
+
+		if(rating){
+			newComment.rating = rating;
+			if(reason){
+				newComment.content = reason;
+			}
+		}else{
+			newComment.content = $scope.rating.comment;
+		}
+
+		comments.$add(newComment).then(function(ref) {
+			$scope.rating.comment = '';
+
+			var id = ref.key;
+			var userComment = firebase.database().ref('users/'+uid+'/comments/'+symbol+'/'+id);
+			userComment.set(true);
+		});
+	}
+
+
+	/*Display data box*/
+	$scope.displayDataBox = function(){
+
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/company').then(function(res){
+			$scope.company = res.data;
+		});
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/quote').then(function(res){
+			$scope.quote = res.data;
+		});
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/stats').then(function(res){
+			$scope.stats = res.data;
+		});
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/previous').then(function(res){
+			$scope.previous = res.data;
+		});
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/financials').then(function(res){
+			$scope.financials = res.data.financials;
+		});
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/logo').then(function(res){
+			$scope.logo = res.data.url;
+		});
+
+		$scope.moreDetails.show();
+	}
+
+	$scope.displayRatingCommentsBox = function(){
+		$scope.pielabels = ["Short", "Sell", "Hold", "Buy", "Strong Buy"];
+		$scope.piedata = $scope.rating.chart;
+		$scope.datasetOverride = {
+			backgroundColor: [
+                '#ff0000',
+                '#800000',
+                '#ffcc00',
+                '#008000',
+                '#33cd5f',
+            ],
+            borderColor: [
+            	'rgba(0, 0, 0, 0)',
+            	'rgba(0, 0, 0, 0)',
+            	'rgba(0, 0, 0, 0)',
+            	'rgba(0, 0, 0, 0)',
+            	'rgba(0, 0, 0, 0)'
+            ]
+        }
+
+		$scope.rating_comments.show();
+	}
+
+	$scope.resize = function(element) {
+		var element = document.getElementById(element);
+		$scope.initialHeight = $scope.initialHeight || element.style.height;
+		element.style.height = $scope.initialHeight;
+		element.style.height = "" + element.scrollHeight + "px";
+	}
+
+	$ionicModal.fromTemplateUrl('moreDetails.html', {
+		scope: $scope,
+		animation: 'slide-in-up'
+	}).then(function(modal) {
+		$scope.moreDetails = modal;
+	});
+
+	$ionicModal.fromTemplateUrl('templates/include/rating_comments.html', {
+		scope: $scope,
+		animation: 'slide-in-up'
+	}).then(function(modal) {
+		$scope.rating_comments = modal;
 	});
 })
 
@@ -501,23 +724,12 @@ angular.module('starter.controllers', [])
 
   $scope.rating = {};
 
-  $http.get('https://api.coinmarketcap.com/v1/ticker/?start=0&limit=20').then(function(res){
-  	console.log(res.data);
-  	$scope.coins = res.data;
-    // for (var i = 0; i <= res.data.result.length - 1; i++) {
-
-    //   var stock = {
-    //     symbol: res.data.result[i].symbol,
-    //     name: res.data.result[i].CoinName
-    //   }
-    //   $scope.symbols.push(stock);
-    //   $scope.data.filtered.push(stock);
-    // }
-    // displayFirst();
-  })
+	$http.get('https://api.coinmarketcap.com/v2/ticker/?start=0&limit=20').then(function(res){
+		console.log(res.data.data);
+		$scope.coins = res.data.data;
+	})
 
   $scope.showMore = function(){
-
     for (var i = $scope.display - 1; i <= $scope.display + 19; i++) {
       $http.get('https://api.iextrading.com/1.0/stock/'+$scope.symbols[i].symbol+'/quote').then(function(res){
 
@@ -555,26 +767,6 @@ angular.module('starter.controllers', [])
     	}
     }
   }
-
-  // function displayFirst(){
-		// var ratingScore;
-		// var ratings = [];
-		// var ref = firebase.database().ref('ratings/');
-		// ref = $firebaseArray(ref);
-		//   for (var i = 0; i <= 19; i++) {
-
-		//     $http.get('https://api.iextrading.com/1.0/stock/'+$scope.symbols[i].symbol+'/quote').then(function(res){
-		//       stock = {
-		//         symbol: res.data.symbol,
-		//         companyName: res.data.companyName,
-		//         latestPrice: res.data.latestPrice,
-		//         changePercent: res.data.changePercent,
-		//         rating: 0
-		//       }
-		//       $scope.stocks.push(stock);
-		//     })
-		//   }
-  // }
 
   $scope.showDetails = function(coin){
 
@@ -706,6 +898,338 @@ angular.module('starter.controllers', [])
   //     var fav = (snapshot.val() || false);
   //   });
   // }
+})
+
+.controller('cryptoDetailsCtrl', function($scope, $stateParams, $ionicHistory, $filter, $http, $firebaseArray, $firebaseObject, $firebaseAuth, $ionicModal){
+
+	// var symbol = $stateParams.symbol;
+
+	$scope.goBack = function(){
+		$ionicHistory.goBack();
+	}
+
+	$scope.openBrowser = function(link){
+		cordova.InAppBrowser.open(link,'_blank','location=yes'); 
+	};
+
+	var symbol = 'BTC';
+
+	var authObj = $firebaseAuth();
+	var uid;
+	var date = new Date();
+	var date = String(date.getFullYear()) + String(date.getMonth()+1) + String(date.getDate());
+
+	$scope.ratingText = ['Short', 'Sell', 'Hold', 'Buy', 'Strong Buy'];
+	var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+	authObj.$onAuthStateChanged(function(firebaseUser) {
+		if (firebaseUser) {
+			uid = firebaseUser.uid;
+		} else {
+			console.log("Signed out");
+		}
+	});
+
+	$http.get('https://api.coinmarketcap.com/v2/ticker/1/').then(function(res){
+		$scope.coin = res.data.data;
+	})
+
+	$scope.rating = {
+		stars: 5,
+		comment: '',
+		chart: [0, 0, 0, 0, 0]
+	};
+
+	authObj.$onAuthStateChanged(function(firebaseUser) {
+		if (firebaseUser) {
+			uid = firebaseUser.uid;
+			var user = firebase.database().ref('users/'+uid+'/name');
+			user.on("value", function(snapshot) {
+				name = snapshot.val();
+			})
+			var fav = firebase.database().ref('users/'+uid+'/watchlist/stocks/'+symbol);
+			fav.on("value", function(snapshot) {
+				$scope.fav = snapshot.val();
+			})
+		}
+	})
+
+	$scope.chart = {
+		data: [],
+		labels: [],
+		range: '24h',
+		shownItems: 10,
+		shownRange: 0,
+		ranges: [
+			'24h'
+		],
+		points: {},
+		series: [
+			'High',
+			'Low',
+			'Open',
+			'Close'
+		],
+		rangeLabels: {
+			'24h': []
+		},
+		datasetOverride: [
+			{
+				fill: false,
+				borderWidth: 1,
+				// borderColor: '#f2f2f2',
+				pointRadius: 1
+			},
+			{
+				fill: false,
+				borderWidth: 1,
+				// borderColor: '#f2f2f2',
+				pointRadius: 1
+			},
+			{
+				fill: false,
+				borderWidth: 1,
+				// borderColor: '#f2f2f2',
+				pointRadius: 1
+			},
+			{
+				fill: false,
+				borderWidth: 1,
+				// borderColor: '#f2f2f2',
+				pointRadius: 1
+			}
+		]
+		,
+		options: {
+			animation: {
+				duration: 0
+			},
+			scales: {
+				yAxes: [{
+					stacked: false,
+					display: true
+				}],
+				xAxes: [{
+					stacked: false,
+					display: true
+				}]
+			},
+			legend: {
+				display: true,
+				labels: {
+					boxWidth: 20,
+					fontColor: '#f2f2f2'
+				}
+			}
+		}
+	};
+
+	for (var i = 0; i <= $scope.chart.ranges.length - 1; i++) {
+		getData($scope.chart.ranges[i]);
+	}
+	
+	$scope.showData = function(range){
+		if(range){
+			$scope.chart.range = range;
+		}else{
+			range = $scope.chart.range;
+		}
+
+		if($scope.chart.shownRange >= $scope.chart.rangeLabels[$scope.chart.range].length - $scope.chart.shownItems){
+			$scope.chart.shownRange = $scope.chart.rangeLabels[$scope.chart.range].length - $scope.chart.shownItems;
+		}
+
+		$scope.chart.data[0] = $filter('limitTo')($scope.chart.points[range][0], $scope.chart.shownItems, $scope.chart.shownRange);
+		$scope.chart.data[1] = $filter('limitTo')($scope.chart.points[range][1], $scope.chart.shownItems, $scope.chart.shownRange);
+		$scope.chart.data[2] = $filter('limitTo')($scope.chart.points[range][2], $scope.chart.shownItems, $scope.chart.shownRange);
+		$scope.chart.data[3] = $filter('limitTo')($scope.chart.points[range][3], $scope.chart.shownItems, $scope.chart.shownRange);
+		$scope.chart.labels = $filter('limitTo')($scope.chart.rangeLabels[range], $scope.chart.shownItems, $scope.chart.shownRange);
+	}
+
+	var comments = firebase.database().ref('comments/'+symbol);
+	comments = $firebaseArray(comments);
+
+	comments.$watch(function(){
+		$scope.comments = comments;
+	})
+
+	var rates = firebase.database().ref('ratings/'+symbol+'/'+date);
+	rates = $firebaseArray(rates);
+
+	rates.$watch(function(){
+		rates.forEach(function (obj) {
+			$scope.rating.chart[obj.$value - 1] ++;
+			console.log($scope.rating.chart);
+		})
+	})
+
+	function getData(index){
+
+		$http.get('https://min-api.cryptocompare.com/data/histohour?fsym=BTC&tsym=USD&limit=24').then(function(res){
+			var high = [], low = [], open = [], close = [];
+			for (var x = 0; x <= res.data.Data.length - 1; x ++) {
+				high.push(res.data.Data[x].high);
+				low.push(res.data.Data[x].low);
+				open.push(res.data.Data[x].open);
+				close.push(res.data.Data[x].close);
+				$scope.chart.rangeLabels[index].push(Unix_timestamp(res.data.Data[x].time));
+			}
+			$scope.chart.points[index] = [high, low];
+			if(open){
+				$scope.chart.points[index].push(open);
+				$scope.chart.points[index].push(close);
+			}
+			console.log($scope.chart.points[index]);
+			if(index == '24h'){
+				$scope.showData('24h');
+			}
+			console.log(res.data.Data);
+		})
+	}
+
+	$scope.add = function(){
+		var fav = firebase.database().ref('users/'+uid+'/watchlist/stocks/'+symbol);
+		fav.set(!$scope.fav);
+	}
+
+	$scope.rate = function(){
+		var score = firebase.database().ref('ratings/'+symbol+'/'+date+'/'+uid);
+		var rates = firebase.database().ref('ratings/'+symbol);
+		var rate_avg = firebase.database().ref('ratings/'+symbol+'/avg');
+		var rate_qta = firebase.database().ref('ratings/'+symbol+'/qta');
+
+		var avg = 0, qta = 0;
+
+		rates.on("value", function(snapshot) {
+			if(snapshot.val()){
+				avg = snapshot.val().avg;
+				qta = snapshot.val().qta;
+			}
+		})
+
+		score.on("value", function(snapshot) {
+			if(avg < 1){
+				rate_avg.set(parseInt($scope.rating.stars));
+				rate_qta.set(1);
+			}else{
+				if(snapshot.val()){
+					rate_avg.set(avg + parseInt($scope.rating.stars - snapshot.val()));
+				}else{
+					rate_avg.set(avg + parseInt($scope.rating.stars));
+					rate_qta.set(qta + 1);
+				}
+			}
+			score.set(parseInt($scope.rating.stars));
+		})
+		$scope.sendComment($scope.rating.stars, $scope.rating.comment);
+	}
+
+	$scope.sendComment = function(rating, reason){
+		var time = new Date();
+		time = time.getHours()+':'+time.getMinutes();
+
+		var newComment = {
+			time: time,
+			user: uid,
+			name: name
+		}
+
+		if(rating){
+			newComment.rating = rating;
+			if(reason){
+				newComment.content = reason;
+			}
+		}else{
+			newComment.content = $scope.rating.comment;
+		}
+
+		comments.$add(newComment).then(function(ref) {
+			$scope.rating.comment = '';
+
+			var id = ref.key;
+			var userComment = firebase.database().ref('users/'+uid+'/comments/'+symbol+'/'+id);
+			userComment.set(true);
+		});
+	}
+
+
+	/*Display data box*/
+	$scope.displayDataBox = function(){
+
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/company').then(function(res){
+			$scope.company = res.data;
+		});
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/quote').then(function(res){
+			$scope.quote = res.data;
+		});
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/stats').then(function(res){
+			$scope.stats = res.data;
+		});
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/previous').then(function(res){
+			$scope.previous = res.data;
+		});
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/financials').then(function(res){
+			$scope.financials = res.data.financials;
+		});
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/logo').then(function(res){
+			$scope.logo = res.data.url;
+		});
+
+		$scope.moreDetails.show();
+	}
+
+	$scope.displayRatingCommentsBox = function(){
+		$scope.pielabels = ["Short", "Sell", "Hold", "Buy", "Strong Buy"];
+		$scope.piedata = $scope.rating.chart;
+		$scope.datasetOverride = {
+			backgroundColor: [
+                '#ff0000',
+                '#800000',
+                '#ffcc00',
+                '#008000',
+                '#33cd5f',
+            ],
+            borderColor: [
+            	'rgba(0, 0, 0, 0)',
+            	'rgba(0, 0, 0, 0)',
+            	'rgba(0, 0, 0, 0)',
+            	'rgba(0, 0, 0, 0)',
+            	'rgba(0, 0, 0, 0)'
+            ]
+        }
+
+		$scope.rating_comments.show();
+	}
+
+	$scope.resize = function(element) {
+		var element = document.getElementById(element);
+		$scope.initialHeight = $scope.initialHeight || element.style.height;
+		element.style.height = $scope.initialHeight;
+		element.style.height = "" + element.scrollHeight + "px";
+	}
+
+	function Unix_timestamp(t){
+		var dt = new Date(t*1000);
+		var month = months[dt.getMonth()];
+		var day = dt.getDate();
+		var hr = dt.getHours();
+		var m = "0" + dt.getMinutes();
+		return day+'/'+month+' '+hr+':'+m.substr(-2);
+	}
+
+	$ionicModal.fromTemplateUrl('moreDetails.html', {
+		scope: $scope,
+		animation: 'slide-in-up'
+	}).then(function(modal) {
+		$scope.moreDetails = modal;
+	});
+
+	$ionicModal.fromTemplateUrl('templates/include/rating_comments.html', {
+		scope: $scope,
+		animation: 'slide-in-up'
+	}).then(function(modal) {
+		$scope.rating_comments = modal;
+	});
 })
 
 .controller('watchListCtrl', function($scope, $http, $ionicModal, $ionicPopover, $firebaseArray, $firebaseObject, $firebaseAuth) {
@@ -972,69 +1496,95 @@ angular.module('starter.controllers', [])
 	}
 })
 
-.controller('connectProfileCtrl', function($scope, $http, $ionicPopover, $ionicHistory, $firebaseArray, $firebaseObject, $firebaseAuth, $stateParams) {
-
-  var id = $stateParams.id;
-  var popupTop = document.getElementById('popupTop');
-
-	var userRef = firebase.database().ref('users/'+id+'/');
-	var userObj = $firebaseObject(userRef);
-
-	$scope.company = {};
+.controller('profileCtrl', function($scope, $http, $ionicPopover, $ionicHistory, $firebaseArray, $firebaseObject, $firebaseAuth, $stateParams) {
 
 	$scope.goBack = function(){
 		$ionicHistory.goBack();
 	}
 
-	userObj.$loaded().then(function(){
+	// $scope.ratings = [
+	// 	'20180508': {
+	// 		'A': 5,
+	// 		'B': 5,
+	// 		'C': 2,
+	// 		'D': 3,
+	// 		'E': 1,
+	// 		'F': 4
+	// 	},
+	// 	'20180409': {
+	// 		'A': 5,
+	// 		'B': 5,
+	// 		'C': 2,
+	// 		'D': 3,
+	// 		'E': 1,
+	// 		'F': 4
+	// 	}
+	// ];
 
-		console.log(userObj);
+	// var id;
+	// var authObj = $firebaseAuth();
+	// authObj.$onAuthStateChanged(function(firebaseUser) {
+	// 	if (firebaseUser) {
+	// 		id = firebaseUser.uid;
+	// 		$scope.init();
+	// 	}
+	// })
 
-		// userObj.commentedCount = Object.keys(userObj.comments).length;
-		userObj.watchlistCount = Object.keys(userObj.watchlist).length;
-		userObj.connectsCount = Object.keys(userObj.connects).length;
-		userObj.ratingsCount = Object.keys(userObj.ratings).length;
-		$scope.user = userObj;
+	// $scope.init = function(){
+	// 	var userRef = firebase.database().ref('users/'+id+'/');
+	// 	var userObj = $firebaseObject(userRef);
 
-		var commentsArray = [];
-		// angular.forEach(userObj.comments, function(value, key) {
-		// 	angular.forEach(value, function(value, key){
-		// 		commentsArray.push(key);
-		// 	})
-		// })
+	// 	userObj.$loaded().then(function(){
 
-		// console.log(commentsArray);
-  })
+	// 		// console.log(userObj);
 
-  $scope.showComments = function(symbol, ids){
+	// 		userObj.commentedCount = Object.keys(userObj.comments).length;
+	// 		userObj.watchlistCount = Object.keys(userObj.watchlist).length;
+	// 		userObj.connectsCount = Object.keys(userObj.connects).length;
+	// 		userObj.ratingsCount = Object.keys(userObj.ratings).length;
+	// 		$scope.user = userObj;
 
-		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/company').then(function(res){
-			$scope.company.name = res.data.companyName;
-		});
-		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/logo').then(function(res){
-			$scope.company.logo = res.data.url;
-		});
+	// 		var commentsArray = [];
+	// 		angular.forEach(userObj.comments, function(value, key) {
+	// 			angular.forEach(value, function(value, key){
+	// 				commentsArray.push(key);
+	// 			})
+	// 		})
 
-  	$scope.comments = [];
-		var commentsRef = firebase.database().ref('comments/'+symbol+'/');
-		var commentsArr = $firebaseArray(commentsRef);
+	// 		console.log(commentsArray);
+	// 	})
+	// }
 
-		commentsArr.$loaded().then(function(){
-			angular.forEach(ids, function(value, key){
-				var comment = commentsArr.$getRecord(key);
-				$scope.comments.push(comment);
-			})
-				console.log($scope.comments);
-		})
 
-		$scope.popover_comments.show(popupTop);
-  }
+	// $scope.showComments = function(symbol, ids){
 
-	$ionicPopover.fromTemplateUrl('comments.html', {
-		scope: $scope
-	}).then(function(popover) {
-		$scope.popover_comments = popover;
-	});
+	// 	$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/company').then(function(res){
+	// 		$scope.company.name = res.data.companyName;
+	// 	});
+	// 	$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/logo').then(function(res){
+	// 		$scope.company.logo = res.data.url;
+	// 	});
+
+	// 	$scope.comments = [];
+	// 	var commentsRef = firebase.database().ref('comments/'+symbol+'/');
+	// 	var commentsArr = $firebaseArray(commentsRef);
+
+	// 	commentsArr.$loaded().then(function(){
+	// 		angular.forEach(ids, function(value, key){
+	// 			var comment = commentsArr.$getRecord(key);
+	// 			$scope.comments.push(comment);
+	// 		})
+	// 			console.log($scope.comments);
+	// 	})
+
+	// 	$scope.popover_comments.show(popupTop);
+	// }
+
+	// $ionicPopover.fromTemplateUrl('comments.html', {
+	// 	scope: $scope
+	// }).then(function(popover) {
+	// 	$scope.popover_comments = popover;
+	// });
 })
 
 .controller('publicChatCtrl', function($scope, $ionicPopup, $ionicActionSheet, $location, $anchorScroll, $firebaseArray, $firebaseAuth) {
@@ -1256,33 +1806,4 @@ angular.module('starter.controllers', [])
       lastMessage.set(newMessage);
     });
   }
-
-	// $scope.send = function(){	
-	// 	$http({
-	// 		method: "POST",
-	// 		headers: {'Content-Type': 'application/json', 'Authorization': 'key=AIzaSyB3BQ2XI8ZGG2sE-ELiWF3E7brO9WFCv5E'},
-	// 		url: "https://fcm.googleapis.com/fcm/send",
-	// 		data: JSON.stringify({
-	// 				"notification":{
-	// 					"title":"Ionic FCM Starter",  //Any value
-	// 					"body": $scope.data.message,  //Any value
-	// 					"sound": "default", //If you want notification sound
-	// 					"click_action": "FCM_PLUGIN_ACTIVITY",  //Must be present for Android
-	// 					"icon": "fcm_push_icon"  //White icon Android resource
-	// 				},
-	// 				"data":{
-	// 					"param1":"value1",  //Any data to be retrieved in the notification callback
-	// 					"param2": $scope.data.message
-	// 				},
-	// 				"to":"fEVnIf_yg3M:APA91bHr01U7aHTmW_wojaLUbAXH1xHoFChpgWW_Lcku6x4eQZyB_w4iyg2ZVOfPOCtmtrQJvbwCIBeGtOhq5RpAkFzAO5KwYdN93xLG65EC9ZzG3LpmFuRV16EcbgegAauvsXhx_F3v", //Topic or single device
-	// 				"priority":"high", //If not set, notification won't be delivered on completely closed iOS app
-	// 				"restricted_package_name":"" //Optional. Set for application filtering
-	// 		})
-	// 	}).success(function(data){
-	// 		console.log("Success: " + JSON.stringify(data));
-	// 	}).error(function(data){
-	// 		console.log("Error: " + JSON.stringify(data));
-	// 	});
-	// }
-
 })

@@ -53,6 +53,15 @@ p{
 	color: #f2f2f2;
 }
 
+h1 small,
+h2 small,
+h3 small,
+h4 small,
+h5 small,
+h6 small{
+	font-size: .7rem;
+}
+
 input[type="radio"]{
 	display: none;
 }
@@ -62,8 +71,7 @@ input[type="radio"]{
 	display: block;
 }
 
-i.energized,
-i.ion-star{
+i.energized{
 	color: #ffc900;
 }
 
@@ -87,7 +95,7 @@ i.ion-star{
 }
 
 .item-input input[type="text"]{
-	background: rgba(255, 255, 255, .1);
+	/*background: rgba(255, 255, 255, .1);*/
 	border-radius: 2px;
 	color: #fff;
 	padding: 5px;
@@ -130,8 +138,30 @@ i.ion-star{
 	top: 60px;
 }
 
-.has-tabs-top-and-search{
-	top: 60px;
+.inside-tabs{
+	height: 40px;
+}
+
+.inside-tabs .col{
+	border-left: 1px solid transparent;
+	border-right: 1px solid transparent;
+}
+
+.inside-tabs .col{
+	padding: 0px;
+}
+
+.inside-tabs label{
+	display: block;
+	border-bottom: 2px solid #999;
+	padding: 3px;
+	text-align: center;
+	transition: .3s;
+}
+
+.inside-tabs input[type="radio"]:checked + label{
+	border-bottom-color: #1abc9c;
+	border-bottom-width: 3px;
 }
 
 /*Login*/
@@ -281,25 +311,127 @@ i.ion-star{
 	z-index: 1;
 }
 
+/*Stock*/
+
+#chart-container{
+	height: 220px;
+	width: 90%;
+	float: left;
+}
+
+#chart-container canvas#line{
+	height: 220px;
+	max-height: 220px;
+}
+
+#chart-shownItems{
+	width: 10%;
+	float: left;
+	height: 220px;
+	position: relative;
+}
+
+#chart-shownItems .range{
+	height: 10vw;
+	transform: rotate(-90deg);
+	transform-origin: left bottom;
+	position: absolute;
+	width: 220px;
+	bottom: 0px;
+	left: 100%;
+	border: none;
+	padding: 0px 2px;
+}
+
+#chart-shownItems .range span{
+	transform: rotate(90deg);
+	font-size: 12px;
+}
+
+#chart-shownRange .range span{
+	font-size: 12px;
+}
+
+#chart-shownRange{
+	clear: both;
+	height: 40px;
+}
+
+#chart-shownRange .range{
+	height: 40px;
+	border: none;
+}
+
+#chart-ranges{
+	text-align: center;
+	padding: 5px;
+}
+
+#chart-ranges button.button{
+	/*font-size: 16px;*/
+	display: inline-block;
+	margin: 0px 5px;
+}
+
+#stock-details{
+	height: calc(100% - 300px);
+	padding: 5px;
+}
+
+#stock-details i{
+	font-size: 20px;
+}
+
+#stock-details .row{
+	padding: 0px;
+	border: none;
+}
+
+#stock-details .item .row .col{
+	/*background: transparent;*/
+	padding: 0px;
+}
+
+#stock-details .item h4{
+	margin: 3px 0;
+	font-size: 14px;
+}
+
+#stock-details .item .row .col:nth-child(odd) .item:nth-child(odd){
+	background: #555;
+}
+
+#stock-details .item .row .col:nth-child(even) .item:nth-child(even){
+	background: #555;
+}
+
+#stock-details .item{
+	/*margin: 0px;*/
+	padding: 5px;
+	border: none;
+}
+
+
+
 /*Stock details*/
 
 #cryproDetails,
-#stockDetails{
+#moreDetails{
 }
 
 #cryproDetails .item,
-#stockDetails .item{
+#moreDetails .item{
 	padding: 3px;
 }
 
 #cryproDetails .item h4,
-#stockDetails .item h4{
+#moreDetails .item h4{
 	font-size: 16px;
 	margin: 5px;
 }
 
 #cryproDetails .item span,
-#stockDetails .item span{
+#moreDetails .item span{
 	font-size: 14px;
 	/*padding: 5px 10px;*/
 }
@@ -315,9 +447,10 @@ i.ion-star{
 }
 
 #stock-comments .comments-container{
-	max-height: 130px;
+	height: 100%;
 	padding: 10px;
 }
+
 
 #stock-comments .comments-container p,
 #stock-comments .comments-container p span{
@@ -330,22 +463,46 @@ i.ion-star{
 	margin-bottom: 10px;
 	padding: 5px 3px;
 	border-radius: 3px;
-	background: rgba(0, 0, 0, .2);
+	/*background: rgba(0, 0, 0, .2);*/
 }
 
-#stock-comments .comments-container p span{
+#stock-comments .comments-container p{
 	white-space: pre-line;
 }
 
-#stock-comments .comments-write{
-	padding: 7px;
+#stock-comments .item{
+	border: none;
+	background: transparent;
 }
 
-#stock-comments .comments-write textarea{
-	width: 100%;
+#stock-comments .comments-write{
 	background: transparent;
-	padding: 5px 0px;
+	margin-bottom: 25px;
+}
+
+#stock-comments .comments-write textarea#newComment{
+	background: transparent;
+	padding: 5px 10px 0px;
 	resize: none;
+	max-height: 100px;
+	display: block;
+	border-radius: 3px;
+	border-bottom: 2px solid #f2f2f2;
+	color: #fff;
+	margin: 0px auto 15px;
+	width: 95%;
+	height: 30px;
+}
+
+#stock-comments .comments-write textarea#newComment::placeholder{
+	color: #c0c0c0;
+}
+
+#stock-comments .comments-write button.button{
+	position: absolute;
+	right: 15px;
+	display: block;
+	z-index: 1;
 }
 
 #stock-financials i{
@@ -353,31 +510,6 @@ i.ion-star{
 }
 
 /*Stock Tabs*/
-
-.inside-tabs{
-}
-
-.inside-tabs .col{
-	border-left: 1px solid transparent /*#2c3e50*/;
-	border-right: 1px solid transparent /*#2c3e50*/;
-}
-
-.inside-tabs .col{
-	padding: 0px;
-}
-
-.inside-tabs label{
-	display: block;
-	border-bottom: 2px solid #999;
-	padding: 3px;
-	text-align: center;
-	transition: .3s;
-}
-
-.inside-tabs input[type="radio"]:checked + label{
-	border-bottom-color: #1abc9c;
-	border-bottom-width: 3px;
-}
 
 /*stock-rating*/
 
@@ -404,7 +536,7 @@ i.ion-star{
 }
 
 #stock-rating{
- position: relative;
+	position: relative;
 }
 
 #stock-rating textarea{
@@ -414,11 +546,6 @@ i.ion-star{
 	padding: 5px;
 }
 
-/*#stock-rating button{
-	position: absolute;
-	right: 0px;
-}
-*/
 /*Profile*/
 
 .card.profile .item{

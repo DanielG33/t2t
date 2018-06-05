@@ -1,0 +1,76 @@
+<ion-modal-view class="modal-transparent" id="rating_comments">
+	<ion-header-bar class="bar-dark">
+		<h1 class="title"></h1>
+		<div class="buttons">
+			<button class="button button-light" ng-click="rating_comments.hide()">Close</button>
+		</div>
+	</ion-header-bar>
+	<ion-content>
+		<div class="item inside-tabs row" ng-init="tabs = 'comments'">
+			<div class="col">
+				<input type="radio" id="tab-comments" name="tabs" ng-model="tabs" value="comments">
+				<label for="tab-comments">Comments</label>
+			</div>
+			<div class="col">
+				<input type="radio" id="tab-rating" name="tabs" ng-model="tabs" value="rating">
+				<label for="tab-rating">Rate</label>
+			</div>
+		</div>
+		<div class="item item-text-wrap inside-tab-content" id="stock-comments" ng-if="tabs == 'comments'">
+			<div class="comments-write">
+					<textarea id="newComment" ng-model="rating.comment" ng-change="resize('newComment')" placeholder="Write a comment"></textarea>
+					<button class="button button-small" ng-click="sendComment()">
+						Submit
+					</button>
+			</div>
+			<ion-scroll class="comments-container">
+				<div class="item item-avatar" ng-repeat="comment in comments | orderBy:'+':true">
+					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEgKn4Ii9bzI9BKvl4RDiWKDmp2GXeOoqpC93z-XkhNPCdv8bW">
+					<h2>
+						{{comment.name}}
+						<span ng-if="comment.rating">-</span>
+						<small>{{ratingText[comment.rating - 1]}}</small>
+					</h2>
+					<p>{{comment.content}}</p>
+				</div>
+				<button class="button button-block button-light button-clear">Show more...</button>
+			</ion-scroll>
+		</div>
+
+		<div class="item item-text-wrap inside-tab-content" id="stock-rating" ng-if="tabs == 'rating'">
+			<div class="row">
+				<div class="col col-80 col-offset-10
+				">
+					<ul class="range-labels">
+						<li>1</li>
+						<li>2</li>
+						<li>3</li>
+						<li>4</li>
+						<li>5</li>
+					</ul>
+					<div class="range">
+						<input type="range" ng-model="rating.stars" min="1" max="5" step="1">
+					</div>
+					<div class="ratingStars">
+						<h3>{{ratingText[rating.stars-1]}}</h3>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<h2>Reason for rating</h2>
+					<textarea style="width: 100%" rows="3" ng-model="rating.comment" placeholder="Explain your rating by linking to a website, detailing an analysis, or by explaining sentiment..."></textarea>
+				</div>
+			</div>
+			<div class="row" style="text-align: right;">
+				<div class="col">
+					<button class="button button-balanced button-clear button-icon icon ion-checkmark-circled" ng-click="rate()"></button>
+				</div>
+			</div>
+
+			<canvas id="pie" class="chart chart-pie" chart-data="piedata" chart-labels="pielabels" chart-options="options" chart-dataset-override="datasetOverride">
+			</canvas> 
+
+		</div>
+	</ion-content>
+</ion-modal-view>

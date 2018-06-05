@@ -1,0 +1,239 @@
+<ion-view>
+	<ion-header-bar class="bar bar-dark" style="top: 0px">
+		<h1 class="title">BTC - Bitcoin</h1>
+		<div class="buttons">
+			<button class="button button-assertive button-clear button-icon icon" ng-class="{'ion-ios-heart': fav, 'ion-ios-heart-outline': !fav}" ng-click="add()"></button>
+			<!-- <button class="button button-icon button-clear ion-document-text" ng-click="displayDataBox()"></button> -->
+			<button class="button button-icon button-clear ion-chatbubbles" ng-click="displayRatingCommentsBox()"></button>
+		</div>
+	</ion-header-bar>
+	<ion-content>
+		<div id="chart-container">
+			<canvas height="200" style="height: 200px max-height: 200px; width: 70%;" id="line" class="chart chart-line" chart-data="chart.data" chart-labels="chart.labels" chart-series="chart.series" chart-options="chart.options" chart-dataset-override="chart.datasetOverride" chart-click="onClick"></canvas>
+		</div>
+		<div id="chart-shownItems">
+			<div class="item range">
+				<span>10</span>
+				<input type="range" min="10" max="{{chart.rangeLabels[chart.range].length}}" ng-model="chart.shownItems" ng-change="showData()">
+				<span>{{chart.rangeLabels[chart.range].length}}</span>
+			</div>
+		</div>
+		<div id="chart-shownRange">
+			<div class="item range">
+				<span>{{chart.rangeLabels[chart.range][chart.shownRange]}}</span>
+				<input type="range" min="0" max="{{chart.rangeLabels[chart.range].length - chart.shownItems}}" ng-model="chart.shownRange" ng-change="showData()">
+				<span>{{chart.rangeLabels[chart.range][(+chart.shownRange)+(+chart.shownItems)-1]}}</span>
+			</div>
+		</div>
+		<div id="chart-ranges">
+			<button class="button button-small button-light" ng-class="{'button-outline': chart.range != button}" ng-repeat="button in chart.ranges" ng-click="showData(button)">{{button}}</button>
+		</div>
+		<ion-scroll id="stock-details">
+			<div class="item item-text-wrap row">
+				<div class="col col-60">
+					<h2>{{coin.name}}</h2>
+					<h3>Rating: {{ratings[company.symbol].avg / ratings[company.symbol].qta | number : 1}}</h3>
+				</div>
+				<div class="col col-40">
+					<h2> {{coin.quotes.USD.price | currency}} </h2>
+					<!-- <h3>{{ratingScore}} - {{ratingsArray.length}}</h3> -->
+				</div>
+			</div>
+			<div class="item item-body">
+				<b>Changes</b>
+				<div class="row">
+					<div class="col">
+						<h4>1 Hour</h4>
+						<span class="price-change" ng-class="{'balanced' : coin.quotes.USD.percent_change_1h > 0, 'assertive' : coin.quotes.USD.percent_change_1h < 0}">
+							<i class="ion-arrow-up-b" ng-if="coin.quotes.USD.percent_change_1h > 0"></i>
+							<i class="ion-arrow-down-b" ng-if="coin.quotes.USD.percent_change_1h < 0"></i>
+							{{coin.quotes.USD.percent_change_1h | number : 2}}%
+						</span>
+					</div>
+					<div class="col">
+						<h4>24 Hour</h4>
+						<span class="price-change" ng-class="{'balanced' : coin.quotes.USD.percent_change_24h > 0, 'assertive' : coin.quotes.USD.percent_change_24h < 0}">
+							<i class="ion-arrow-up-b" ng-if="coin.quotes.USD.percent_change_24h > 0"></i>
+							<i class="ion-arrow-down-b" ng-if="coin.quotes.USD.percent_change_24h < 0"></i>
+							{{coin.quotes.USD.percent_change_24h | number : 2}}%
+						</span>
+					</div>
+					<div class="col">
+						<h4>7 Days</h4>
+						<span class="price-change" ng-class="{'balanced' : coin.quotes.USD.percent_change_7d > 0, 'assertive' : coin.quotes.USD.percent_change_7d < 0}">
+							<i class="ion-arrow-up-b" ng-if="coin.quotes.USD.percent_change_7d > 0"></i>
+							<i class="ion-arrow-down-b" ng-if="coin.quotes.USD.percent_change_7d < 0"></i>
+							{{coin.quotes.USD.percent_change_7d | number : 2}}%
+						</span>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col">
+						<ion-list>
+							<ion-item>
+								<h4>Market Cap USD</h4>
+								<span>{{coin.quotes.USD.market_cap | currency}}</span>
+							</ion-item>
+							<ion-item>
+								<h4>Circulating Supply</h4>
+								<span>{{coin.circulating_supply | number : 2}}</span>
+							</ion-item>
+						</ion-list>
+					</div>
+					<div class="col">
+						<ion-list>
+							<ion-item>
+								<h4>Total Supply</h4>
+								<span>{{coin.total_supply | number : 2}}</span>
+							</ion-item>
+							<ion-item>
+								<h4>Max Supply</h4>
+								<span>{{coin.max_supply | number : 2}}</span>
+							</ion-item>
+						</ion-list>
+					</div>
+				</div>
+			</div>
+		</ion-scroll>
+
+	</ion-content>
+	<script id="moreDetails.html" type="text/ng-template">
+		<ion-modal-view class="modal-transparent" id="moreDetails">
+			<ion-header-bar class="bar-dark">
+				<h1 class="title"></h1>
+				<div class="buttons">
+					<button class="button button-light" ng-click="moreDetails.hide()">Close</button>
+				</div>
+			</ion-header-bar>
+			<ion-content>
+				<div class="list card">
+					<div class="item item-text-wrap inside-tab-content" id="stock-company">
+						<img ng-src="{{logo}}" alt="{{company.companyName}} Logo">
+						{{company.description}} <br><br>
+						<p>{{company.sector}} - {{company.industry}}</p>
+						<p>
+							<a href=javascripto:void(0)" ng-click="openBrowser(company.website)">{{company.website}}</a>
+						</p>
+					</div>
+					<hr>
+					<div class="item item-text-wrap inside-tab-content" id="stock-financials" ng-init="report = 0">
+						<h4>Report Date: {{financials[report].reportDate}}</h4>
+						<div class="row">
+							<div class="col col-10">
+								<label>
+									<input type="radio" name="report" ng-model="report" value="0" ng-value="0">
+									<i class="ion-android-radio-button-on positive" ng-if="report == 0"></i>
+									<i class="ion-android-radio-button-off" ng-if="report != 0"></i>
+								</label>
+								<label>
+									<input type="radio" name="report" ng-model="report" value="1" ng-value="1">
+									<i class="ion-android-radio-button-on positive" ng-if="report == 1"></i>
+									<i class="ion-android-radio-button-off" ng-if="report != 1"></i>
+								</label>
+								<label>
+									<input type="radio" name="report" ng-model="report" value="2" ng-value="2">
+									<i class="ion-android-radio-button-on positive" ng-if="report == 2"></i>
+									<i class="ion-android-radio-button-off" ng-if="report != 2"></i>
+								</label>
+								<label>
+									<input type="radio" name="report" ng-model="report" value="3" ng-value="3">
+									<i class="ion-android-radio-button-on positive" ng-if="report == 3"></i>
+									<i class="ion-android-radio-button-off" ng-if="report != 3"></i>
+								</label>
+							</div>
+							<div class="col">
+								<ion-list>
+									<ion-item>
+										<h5>Cash Change</h5>
+										<p>{{financials[report].cashChange | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Cost of Revenue</h5>
+										<p>{{financials[report].costOfRevenue | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Current Cash</h5>
+										<p>{{financials[report].currentCash | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Gross Profit</h5>
+										<p>{{financials[report].grossProfit | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Op. Expenses</h5>
+										<p>{{financials[report].operatingExpense | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Op. Income</h5>
+										<p>{{financials[report].operatingIncome | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Research & Dev</h5>
+										<p>{{financials[report].researchAndDevelopment | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Total Assets</h5>
+										<p>{{financials[report].totalAssets | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Total Debt</h5>
+										<p>{{financials[report].totalDebt | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Total Revenue</h5>
+										<p>{{financials[report].totalRevenue | currency}}</p>
+									</ion-item>
+								</ion-list>
+							</div>
+							<div class="col">
+								<ion-list>
+									<ion-item>
+										<h5>Cash Flow</h5>
+										<p>{{financials[report].cashFlow | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Current Assets</h5>
+										<p>{{financials[report].currentAssets | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Current Debt</h5>
+										<p>{{financials[report].currentDebt | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Net Income</h5>
+										<p>{{financials[report].netIncome | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Op. Gain Losses</h5>
+										<p>{{financials[report].OperatingGainLosses | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Op. Revenue</h5>
+										<p>{{financials[report].operatingRevenue | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Shareholder Equity</h5>
+										<p>{{financials[report].shareholderEquity | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Current</h5>
+										<p>{{financials[report].currentCash | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Total Cash</h5>
+										<p>{{financials[report].totalCash | currency}}</p>
+									</ion-item>
+									<ion-item>
+										<h5>Total Liabilities</h5>
+										<p>{{financials[report].totalLiabilities | currency}}</p>
+									</ion-item>
+								</ion-list>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ion-content>
+		</ion-modal-view>
+	</script>
+</ion-view>
