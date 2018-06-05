@@ -1,6 +1,7 @@
 <ion-view>
 	<ion-header-bar class="bar bar-dark" style="top: 0px">
-		<h1 class="title">BTC - Bitcoin</h1>
+		<button class="button button-clear button-light icon-left ion-ios-arrow-back" ng-click="goBack()"></button>
+		<h1 class="title">{{coin.symbol}} - {{coin.name}}</h1>
 		<div class="buttons">
 			<button class="button button-assertive button-clear button-icon icon" ng-class="{'ion-ios-heart': fav, 'ion-ios-heart-outline': !fav}" ng-click="add()"></button>
 			<!-- <button class="button button-icon button-clear ion-document-text" ng-click="displayDataBox()"></button> -->

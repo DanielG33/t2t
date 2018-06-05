@@ -15,7 +15,7 @@ angular.module('starter.controllers', [])
 	$scope.openBrowser = function(link){
 		cordova.InAppBrowser.open(link,'_blank','location=yes'); 
 	};
-	
+
 	$scope.$on('$ionicView.enter', function(e) {
 		var authObj = $firebaseAuth();
 		authObj.$signOut();
@@ -902,8 +902,6 @@ angular.module('starter.controllers', [])
 
 .controller('cryptoDetailsCtrl', function($scope, $stateParams, $ionicHistory, $filter, $http, $firebaseArray, $firebaseObject, $firebaseAuth, $ionicModal){
 
-	// var symbol = $stateParams.symbol;
-
 	$scope.goBack = function(){
 		$ionicHistory.goBack();
 	}
@@ -912,7 +910,10 @@ angular.module('starter.controllers', [])
 		cordova.InAppBrowser.open(link,'_blank','location=yes'); 
 	};
 
-	var symbol = 'BTC';
+	var id = $stateParams.symbol;
+	var symbol;
+	var comments;
+	var rates;
 
 	var authObj = $firebaseAuth();
 	var uid;
@@ -930,8 +931,34 @@ angular.module('starter.controllers', [])
 		}
 	});
 
-	$http.get('https://api.coinmarketcap.com/v2/ticker/1/').then(function(res){
+	$http.get('https://api.coinmarketcap.com/v2/ticker/'+id+'/').then(function(res){
 		$scope.coin = res.data.data;
+		symbol = res.data.data.symbol;
+		console.log(res.data.data);
+
+		comments = firebase.database().ref('comments/'+symbol);
+		comments = $firebaseArray(comments);
+
+		comments.$watch(function(){
+			$scope.comments = comments;
+		})
+
+		rates = firebase.database().ref('ratings/'+symbol+'/'+date);
+		rates = $firebaseArray(rates);
+
+		console.log(rates);
+
+		rates.$watch(function(){
+			$scope.rating.chart[0] = 0;
+			$scope.rating.chart[1] = 0;
+			$scope.rating.chart[2] = 0;
+			$scope.rating.chart[3] = 0;
+			$scope.rating.chart[4] = 0;
+			rates.forEach(function (obj) {
+				$scope.rating.chart[obj.$value - 1] ++;
+				console.log($scope.rating.chart);
+			})
+		})
 	})
 
 	$scope.rating = {
@@ -1046,23 +1073,6 @@ angular.module('starter.controllers', [])
 		$scope.chart.labels = $filter('limitTo')($scope.chart.rangeLabels[range], $scope.chart.shownItems, $scope.chart.shownRange);
 	}
 
-	var comments = firebase.database().ref('comments/'+symbol);
-	comments = $firebaseArray(comments);
-
-	comments.$watch(function(){
-		$scope.comments = comments;
-	})
-
-	var rates = firebase.database().ref('ratings/'+symbol+'/'+date);
-	rates = $firebaseArray(rates);
-
-	rates.$watch(function(){
-		rates.forEach(function (obj) {
-			$scope.rating.chart[obj.$value - 1] ++;
-			console.log($scope.rating.chart);
-		})
-	})
-
 	function getData(index){
 
 		$http.get('https://min-api.cryptocompare.com/data/histohour?fsym=BTC&tsym=USD&limit=24').then(function(res){
@@ -1088,7 +1098,7 @@ angular.module('starter.controllers', [])
 	}
 
 	$scope.add = function(){
-		var fav = firebase.database().ref('users/'+uid+'/watchlist/stocks/'+symbol);
+		var fav = firebase.database().ref('users/'+uid+'/watchlist/crypto/'+symbol);
 		fav.set(!$scope.fav);
 	}
 
@@ -1363,65 +1373,22 @@ angular.module('starter.controllers', [])
     console.log($scope.stocks);
   }
 
-  $scope.showDetails = function(symbol){
-
-    var fav = firebase.database().ref('users/daniel/watchlist/'+symbol);
-    fav.on("value", function(snapshot) {
-      $scope.fav = snapshot.val();
-    })
-
-    $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/company').then(function(res){
-      $scope.stock.company = res.data;
-    });
-    $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/quote').then(function(res){
-      $scope.stock.quote = res.data;
-    });
-    $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/stats').then(function(res){
-      $scope.stock.stats = res.data;
-    });
-    $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/previous').then(function(res){
-      $scope.stock.previous = res.data;
-    });
-    $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/financials').then(function(res){
-      $scope.stock.financials = res.data;
-    });
-    $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/logo').then(function(res){
-      $scope.stock.logo = res.data.url;
-    });
-      // PENDIG
-      // First check if there's any daya for "today". If not, print the last day data
-    $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/chart/1d').then(function(res){
-      $scope.stock.chart.day = res.data[res.data.length - 1];
-    });
-      // PENDING
-
-    console.log($scope.stock);
-    $scope.modal.show();
-  }
-
-  $scope.add = function(){
-    var symbol = $scope.stock.company.symbol;
-    var fav = firebase.database().ref('users/daniel/watchlist/'+symbol);
-    fav.set(!$scope.fav);
-  }
-
   $ionicModal.fromTemplateUrl('stockDetails.html', {
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
     $scope.modal = modal;
   });
-  $scope.openModal = function() {
-    $scope.modal.show();
-    $scope.test = 12;
-  };
-  $scope.closeModal = function() {
-    $scope.modal.hide();
-  };
+	$scope.openModal = function() {
+		$scope.modal.show();
+	};
+	$scope.closeModal = function() {
+		$scope.modal.hide();
+	};
 
-  $scope.openPopover = function($event) {
-    $scope.details.show($event);
-  };
+	$scope.openPopover = function($event) {
+		$scope.details.show($event);
+	};
 })
 
 .controller('connectsCtrl', function($scope, $ionicActionSheet, $firebaseArray, $firebaseObject, $firebaseAuth) {
