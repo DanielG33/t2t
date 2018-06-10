@@ -54,15 +54,17 @@ angular.module('starter.controllers', [])
 			console.log("User " + firebaseUser.uid + " created successfully!");
 			var newUser = firebase.database().ref('users/'+firebaseUser.uid);
 			var data = {
+				firstName: $scope.signupData.firstName,
+				lastName: $scope.signupData.lastName,
 				name: $scope.signupData.firstName+' '+$scope.signupData.lastName,
 				email: $scope.signupData.email,
 				country: $scope.signupData.country,
 				exp: $scope.signupData.exp,
 				gender: $scope.signupData.gender
 			}
-      newUser.set(data);
-      $scope.modal.hide();
-      $location.path('/app/stocks');
+			newUser.set(data);
+			$scope.modal.hide();
+			$location.path('/app/stocks');
 
 		}).catch(function(error) {
 			console.error("Error: ", error);
@@ -116,16 +118,6 @@ angular.module('starter.controllers', [])
 	var stocks;
 
   $scope.data.filtered = [];
-
-  $scope.stock = {
-    company: {},
-    quote: {},
-    previous: {},
-    logo: {},
-    chart: {
-      day: {}
-    }
-  };
 
   $http.get('https://api.iextrading.com/1.0/ref-data/symbols').then(function(res){
     for (var i = 0; i <= res.data.length - 1; i++) {
@@ -199,139 +191,6 @@ angular.module('starter.controllers', [])
 		}
 	}
 
-  $scope.showDetails = function(symbol){
-
-  	$location.path('/app/stockDetails');
-
-		// $scope.comments = [];
-
-		// var fav = firebase.database().ref('users/'+uid+'/watchlist/'+symbol);
-		// fav.on("value", function(snapshot) {
-		// 	$scope.fav = snapshot.val();
-		// })
-
-		// var comments = firebase.database().ref('comments/'+symbol);
-		// $scope.commentsArray = $firebaseArray(comments);
-
-		// $scope.commentsArray.$loaded().then(function(){
-		// 	$location.hash('bottom');
-		// })
-
-		// $scope.commentsArray.$watch(function(){
-		// 	$scope.comments = $scope.commentsArray;
-		// 	$anchorScroll();
-		// })
-
-  //   var ratings = firebase.database().ref('ratings/'+symbol);
-  //   $scope.ratingsArray = $firebaseArray(ratings);
-
-  //   $scope.ratingsArray.$watch(function(){
-  //     $scope.ratingScore = 0;
-  //     $scope.ratingsArray.forEach(function (obj) {
-  //       $scope.ratingScore += obj.$value;
-  //     })
-  //   })
-
-
-  //   $scope.ratingsArray.$loaded().then(function(){
-  //   	// console.log($scope.ratingsArray.$getRecord(uid));
-		// 	if($scope.ratingsArray.$getRecord(uid)){
-		// 		$scope.rating.stars = $scope.ratingsArray.$getRecord(uid).$value;
-		// 	}else{
-		// 		$scope.rating.stars = 5;
-		// 	}
-  //   })
-
-		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/company').then(function(res){
-		// 	$scope.stock.company = res.data;
-		// });
-		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/quote').then(function(res){
-		// 	$scope.stock.quote = res.data;
-		// });
-		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/stats').then(function(res){
-		// 	$scope.stock.stats = res.data;
-		// });
-		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/previous').then(function(res){
-		// 	$scope.stock.previous = res.data;
-		// });
-		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/financials').then(function(res){
-		// 	$scope.stock.financials = res.data.financials;
-		// });
-		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/logo').then(function(res){
-		// 	$scope.stock.logo = res.data.url;
-		// });
-		// // First check if there's any daya for "today". If not, print the last day data
-		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/chart/1d').then(function(res){
-		//   $scope.points = [];
-
-		//   $scope.stock.chart.day = res.data;
-
-		//   var high = [],
-		//       low = [],
-		//       labels = [];
-
-		//   for (var i = 0; i <= res.data.length - 1; i += 5) {
-		//     $scope.points.push(res.data[i].average);
-		//     labels.push('');
-		//   }
-
-		//   $scope.labels = labels;
-		//   $scope.datasetOverride = {
-		//     fill: false,
-		//     borderWidth: 2,
-		//     borderColor: '#f2f2f2',
-		//     pointRadius: 0,
-		//     borderJoinStyle: 'miter',
-		//     borderCapStyle: 'square'
-		//   };
-		// });
-
-  //   $scope.modal.show();
-  }
-
-	$scope.add = function(){
-		var symbol = $scope.stock.company.symbol;
-		var fav = firebase.database().ref('users/'+uid+'/watchlist/'+symbol);
-		fav.set(!$scope.fav);
-	}
-
-	$scope.sendComment = function(rating, reason){
-
-		var time = new Date();
-		time = time.getHours()+':'+time.getMinutes();
-
-		var newComment = {
-			time: time,
-			user: uid,
-			name: name
-		}
-
-		if(rating){
-			newComment.rating = rating;
-			if(reason){
-				newComment.content = reason;
-			}
-		}else{
-			newComment.content = $scope.data.newComment;
-		}
-
-		$scope.commentsArray.$add(newComment).then(function(ref) {
-			$scope.data.newComment = null;
-			$scope.rating.comment = null;
-
-      var symbol = $scope.stock.company.symbol;
-      var id = ref.key;
-      var userComment = firebase.database().ref('users/'+uid+'/comments/'+symbol+'/'+id);
-      userComment.set(true);
-		});
-	}
-
-	$ionicModal.fromTemplateUrl('stockDetails.html', {
-		scope: $scope,
-		animation: 'slide-in-up'
-	}).then(function(modal) {
-		$scope.modal = modal;
-	});
 
 	$ionicModal.fromTemplateUrl('settings.html', {
 		scope: $scope,
@@ -359,14 +218,6 @@ angular.module('starter.controllers', [])
 	var date = String(date.getFullYear()) + String(date.getMonth()+1) + String(date.getDate());
 
 	$scope.ratingText = ['Short', 'Sell', 'Hold', 'Buy', 'Strong Buy'];
-
-	authObj.$onAuthStateChanged(function(firebaseUser) {
-		if (firebaseUser) {
-			uid = firebaseUser.uid;
-		} else {
-			console.log("Signed out");
-		}
-	})
 
 	$scope.rating = {
 		stars: 5,
@@ -557,6 +408,7 @@ angular.module('starter.controllers', [])
 		var rates = firebase.database().ref('ratings/'+symbol);
 		var rate_avg = firebase.database().ref('ratings/'+symbol+'/avg');
 		var rate_qta = firebase.database().ref('ratings/'+symbol+'/qta');
+		var user_rating = firebase.database().ref('users/'+uid+'/ratings/'+symbol+'/'+date);
 
 		// rate_avg.set('rate_avg');
 
@@ -582,6 +434,7 @@ angular.module('starter.controllers', [])
 				}
 			}
 			score.set(parseInt($scope.rating.stars));
+			user_rating.set(parseInt($scope.rating.stars));
 		})
 		$scope.sendComment($scope.rating.stars, $scope.rating.comment);
 	}
@@ -590,6 +443,7 @@ angular.module('starter.controllers', [])
 		var time = new Date();
 		time = time.getHours()+':'+time.getMinutes();
 
+		var userComment_content;
 		var newComment = {
 			time: time,
 			user: uid,
@@ -597,23 +451,24 @@ angular.module('starter.controllers', [])
 		}
 
 		if(rating){
+			userComment_content = $scope.ratingText[rating - 1];
 			newComment.rating = rating;
 			if(reason){
 				newComment.content = reason;
+				userComment_content += ' - '+reason;
 			}
 		}else{
 			newComment.content = $scope.rating.comment;
+			userComment_content = $scope.rating.comment;
 		}
 
 		comments.$add(newComment).then(function(ref) {
 			$scope.rating.comment = '';
-
 			var id = ref.key;
 			var userComment = firebase.database().ref('users/'+uid+'/comments/'+symbol+'/'+id);
-			userComment.set(true);
+			userComment.set(userComment_content);
 		});
 	}
-
 
 	/*Display data box*/
 	$scope.displayDataBox = function(){
@@ -689,7 +544,6 @@ angular.module('starter.controllers', [])
 
 	var authObj = $firebaseAuth();
 	var uid;
-	var email;
 	var user;
 	var date = new Date();
 	var date = String(date.getFullYear()) + String(date.getMonth()+1) + String(date.getDate());
@@ -700,12 +554,9 @@ angular.module('starter.controllers', [])
 		$scope.ratings = ratings;
 	})
 
-	$scope.ratingText = ['Short', 'Sell', 'Hold', 'Buy', 'Strong Buy'];
-
 	authObj.$onAuthStateChanged(function(firebaseUser) {
 		if (firebaseUser) {
 			uid = firebaseUser.uid;
-			email = firebaseUser.email;
 		} else {
 			console.log("Signed out");
 		}
@@ -768,127 +619,6 @@ angular.module('starter.controllers', [])
     }
   }
 
-  $scope.showDetails = function(coin){
-
-  	var symbol = coin.symbol;
-  	$scope.coin = coin;
-
-		$scope.comments = [];
-		var fav = firebase.database().ref('users/'+uid+'/watchlist/'+symbol);
-		fav.on("value", function(snapshot) {
-			$scope.fav = snapshot.val();
-		})
-
-		var comments = firebase.database().ref('comments/'+symbol);
-    $scope.commentsArray = $firebaseArray(comments);
-
-    $scope.commentsArray.$watch(function(){
-      $scope.comments = [];
-
-      $scope.commentsArray.forEach(function (obj) {
-        $scope.comments.push(obj);
-      })
-    })
-
-    var ratings = firebase.database().ref('ratings/'+symbol);
-    $scope.ratingsArray = $firebaseArray(ratings);
-
-    $scope.ratingsArray.$watch(function(){
-      $scope.ratingScore = 0;
-      // console.log($scope.ratingsArray.length);
-
-      $scope.ratingsArray.forEach(function (obj) {
-        $scope.ratingScore += obj.$value;
-        // $scope.ratingScore = $scope.ratingScore / $scope.ratingsArray.length;
-      })
-    })
-
-
-    $scope.ratingsArray.$loaded().then(function(){
-    	// console.log($scope.ratingsArray.$getRecord(uid));
-			if($scope.ratingsArray.$getRecord(uid)){
-				$scope.rating.stars = $scope.ratingsArray.$getRecord(uid).$value;
-			}else{
-				$scope.rating.stars = 5;
-			}
-    })
-
-    $scope.modal.show();
-  }
-
-	$scope.add = function(){
-		var symbol = $scope.coin.symbol;
-		var fav = firebase.database().ref('users/'+uid+'/watchlist/'+symbol);
-		fav.set(!$scope.fav);
-	}
-
-	$scope.sendComment = function(rating){
-		var time = new Date();
-		time = time.getHours()+':'+time.getMinutes();
-
-		var newComment = {
-			content: $scope.data.newComment,
-			time: time,
-			user: email
-		}
-		$scope.commentsArray.$add(newComment).then(function(ref) {
-			$scope.data.newComment = null;
-
-      var symbol = $scope.coin.symbol;
-      var id = ref.key;
-      var userComment = firebase.database().ref('users/'+uid+'/comments/'+symbol+'/'+id);
-      userComment.set(true);
-		});
-	}
-
-	$scope.rate = function(){
-		var symbol = $scope.coin.symbol;
-		var score = firebase.database().ref('ratings/'+symbol+'/'+date+'/'+uid);
-		var rates = firebase.database().ref('ratings/'+symbol);
-
-		var avg, qta;
-
-		rates.on("value", function(snapshot) {
-			if(snapshot.val()){
-				avg = snapshot.val().avg;
-				qta = snapshot.val().qta;
-			}else{
-				avg = 0;
-        qta = 0;
-			}
-		})
-
-		score.on("value", function(snapshot) {
-			if(avg < 1){
-				rates.child('avg').set(parseInt($scope.rating.stars));
-				rates.child('qta').set(1);
-			}else{
-				if(snapshot.val()){
-					console.log(snapshot.val());
-					rates.child('avg').set(avg + parseInt($scope.rating.stars - snapshot.val()));
-				}else{
-					rates.child('avg').set(avg + parseInt($scope.rating.stars));
-					rates.child('qta').set(qta + 1);
-				}
-			}
-			score.set(parseInt($scope.rating.stars));
-			// console.log(avg, qta);
-		})
-	}
-
-  $ionicModal.fromTemplateUrl('cryproDetails.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
-  $scope.openModal = function() {
-    $scope.modal.show();
-  };
-  $scope.closeModal = function() {
-    $scope.modal.hide();
-  };
-
   $scope.openPopover = function($event) {
     $scope.details.show($event);
   };
@@ -910,8 +640,7 @@ angular.module('starter.controllers', [])
 		cordova.InAppBrowser.open(link,'_blank','location=yes'); 
 	};
 
-	var id = $stateParams.symbol;
-	var symbol;
+	var symbol = $stateParams.symbol;
 	var comments;
 	var rates;
 
@@ -920,44 +649,54 @@ angular.module('starter.controllers', [])
 	var date = new Date();
 	var date = String(date.getFullYear()) + String(date.getMonth()+1) + String(date.getDate());
 
+	$scope.rating = {};
+	$scope.coin = {
+		info: {},
+		usd: {}
+	};
+
 	$scope.ratingText = ['Short', 'Sell', 'Hold', 'Buy', 'Strong Buy'];
 	var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 	authObj.$onAuthStateChanged(function(firebaseUser) {
 		if (firebaseUser) {
 			uid = firebaseUser.uid;
-		} else {
-			console.log("Signed out");
-		}
-	});
-
-	$http.get('https://api.coinmarketcap.com/v2/ticker/'+id+'/').then(function(res){
-		$scope.coin = res.data.data;
-		symbol = res.data.data.symbol;
-		console.log(res.data.data);
-
-		comments = firebase.database().ref('comments/'+symbol);
-		comments = $firebaseArray(comments);
-
-		comments.$watch(function(){
-			$scope.comments = comments;
-		})
-
-		rates = firebase.database().ref('ratings/'+symbol+'/'+date);
-		rates = $firebaseArray(rates);
-
-		console.log(rates);
-
-		rates.$watch(function(){
-			$scope.rating.chart[0] = 0;
-			$scope.rating.chart[1] = 0;
-			$scope.rating.chart[2] = 0;
-			$scope.rating.chart[3] = 0;
-			$scope.rating.chart[4] = 0;
-			rates.forEach(function (obj) {
-				$scope.rating.chart[obj.$value - 1] ++;
-				console.log($scope.rating.chart);
+			var fav = firebase.database().ref('users/'+uid+'/watchlist/crypto/'+symbol);
+			fav.on("value", function(snapshot) {
+				$scope.fav = snapshot.val();
 			})
+		}
+	})
+
+	$http.get('https://min-api.cryptocompare.com/data/coin/generalinfo?fsyms='+symbol+'&tsym=USD').then(function(res){
+		$scope.coin.info = res.data.Data[0].CoinInfo;
+		console.log(res.data.Data[0].CoinInfo);
+	})
+
+	$http.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+symbol+'&tsyms=USD').then(function(res){
+		$scope.coin.usd = res.data.RAW[symbol].USD;
+		console.log(res.data.RAW[symbol].USD);
+	})
+
+	comments = firebase.database().ref('comments/'+symbol);
+	comments = $firebaseArray(comments);
+
+	comments.$watch(function(){
+		$scope.comments = comments;
+	})
+
+	rates = firebase.database().ref('ratings/'+symbol+'/'+date);
+	rates = $firebaseArray(rates);
+
+	rates.$watch(function(){
+		$scope.rating.chart[0] = 0;
+		$scope.rating.chart[1] = 0;
+		$scope.rating.chart[2] = 0;
+		$scope.rating.chart[3] = 0;
+		$scope.rating.chart[4] = 0;
+		rates.forEach(function (obj) {
+			$scope.rating.chart[obj.$value - 1] ++;
+			console.log($scope.rating.chart);
 		})
 	})
 
@@ -974,7 +713,7 @@ angular.module('starter.controllers', [])
 			user.on("value", function(snapshot) {
 				name = snapshot.val();
 			})
-			var fav = firebase.database().ref('users/'+uid+'/watchlist/stocks/'+symbol);
+			var fav = firebase.database().ref('users/'+uid+'/watchlist/crypto/'+symbol);
 			fav.on("value", function(snapshot) {
 				$scope.fav = snapshot.val();
 			})
@@ -1075,7 +814,7 @@ angular.module('starter.controllers', [])
 
 	function getData(index){
 
-		$http.get('https://min-api.cryptocompare.com/data/histohour?fsym=BTC&tsym=USD&limit=24').then(function(res){
+		$http.get('https://min-api.cryptocompare.com/data/histohour?fsym='+symbol+'&tsym=USD&limit=24').then(function(res){
 			var high = [], low = [], open = [], close = [];
 			for (var x = 0; x <= res.data.Data.length - 1; x ++) {
 				high.push(res.data.Data[x].high);
@@ -1107,6 +846,7 @@ angular.module('starter.controllers', [])
 		var rates = firebase.database().ref('ratings/'+symbol);
 		var rate_avg = firebase.database().ref('ratings/'+symbol+'/avg');
 		var rate_qta = firebase.database().ref('ratings/'+symbol+'/qta');
+		var user_rating = firebase.database().ref('users/'+uid+'/ratings/'+symbol+'/'+date);
 
 		var avg = 0, qta = 0;
 
@@ -1130,6 +870,7 @@ angular.module('starter.controllers', [])
 				}
 			}
 			score.set(parseInt($scope.rating.stars));
+			user_rating.set(parseInt($scope.rating.stars));
 		})
 		$scope.sendComment($scope.rating.stars, $scope.rating.comment);
 	}
@@ -1138,6 +879,7 @@ angular.module('starter.controllers', [])
 		var time = new Date();
 		time = time.getHours()+':'+time.getMinutes();
 
+		var userComment_content;
 		var newComment = {
 			time: time,
 			user: uid,
@@ -1145,25 +887,25 @@ angular.module('starter.controllers', [])
 		}
 
 		if(rating){
+			userComment_content = $scope.ratingText[rating - 1];
 			newComment.rating = rating;
 			if(reason){
 				newComment.content = reason;
+				userComment_content += ' - '+reason;
 			}
 		}else{
 			newComment.content = $scope.rating.comment;
+			userComment_content = $scope.rating.comment;
 		}
 
 		comments.$add(newComment).then(function(ref) {
 			$scope.rating.comment = '';
-
 			var id = ref.key;
 			var userComment = firebase.database().ref('users/'+uid+'/comments/'+symbol+'/'+id);
-			userComment.set(true);
+			userComment.set(userComment_content);
 		});
 	}
 
-
-	/*Display data box*/
 	$scope.displayDataBox = function(){
 
 		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/company').then(function(res){
@@ -1242,153 +984,103 @@ angular.module('starter.controllers', [])
 	});
 })
 
-.controller('watchListCtrl', function($scope, $http, $ionicModal, $ionicPopover, $firebaseArray, $firebaseObject, $firebaseAuth) {
+.controller('watchList_stocksCtrl', function($scope, $http, $ionicModal, $ionicPopover, $firebaseArray, $firebaseObject, $firebaseAuth) {
 
 	var authObj = $firebaseAuth();
 	var uid;
-	var email;
 	var user;
 	var watchlist;
+
+	$scope.stocks = [];
 
 	authObj.$onAuthStateChanged(function(firebaseUser) {
 		if (firebaseUser) {
 			uid = firebaseUser.uid;
-			email = firebaseUser.email;
-			console.log(uid);
-		  var watchlistRef = firebase.database().ref('users/'+uid+'/watchlist/'); 
-			watchlist = $firebaseObject(watchlistRef);
-			watchlist.$watch(function(stock){
-				$scope.symbols = [];
-				angular.forEach(watchlist, function(value, key){
-					if(value){
-						$scope.symbols.push(key);
-					}
-				})
-				displayFirst();
+		  var watchlistRef = firebase.database().ref('users/'+uid+'/watchlist/stocks/'); 
+			watchlist = $firebaseArray(watchlistRef);
+			watchlist.$watch(function(event){
+				console.log(event);
+				if(event.event == 'child_added'){
+					displayStock(event.key);
+				}
 			}) 
 		} else {
 			console.log("Signed out");
 		}
 	})
 
-  // var database = firebase.database();
+	var ratings = firebase.database().ref('ratings/');
+		ratings = $firebaseObject(ratings);
+		ratings.$loaded().then(function(){
+		$scope.ratings = ratings;
+		console.log(ratings);
+	})
 
-  $scope.data = {};
-  $scope.filtered = {};
-  $scope.fav = false;
-  $scope.stocks = [];
-  $scope.symbols = [];
-  $scope.display = 19;
-  var stocks;
+  function displayStock(symbol){
+		$http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/quote').then(function(res){
 
-  $scope.data.filtered = [];
+			var stock = {
+				symbol: res.data.symbol,
+				companyName: res.data.companyName,
+				latestPrice: res.data.latestPrice,
+				changePercent: res.data.changePercent
+			}
 
-  $scope.stock = {
-    company: {},
-    quote: {},
-    previous: {},
-    logo: {},
-    chart: {
-      day: {}
-    }
-  };
-
-
-
-  // database.ref('/users/daniel/favs/').once('value').then(function(snapshot) {
-  //   // var username = (snapshot.val() && snapshot.val().name) || 'Anonymous';
-  //   var favs = snapshot.val();
-  //   console.log($scope.favs);
-  // })
-
-  // $http.get('https://api.iextrading.com/1.0/ref-data/symbols').then(function(res){
-  //   for (var i = 0; i <= res.data.length - 1; i++) {
-  //     $scope.symbols.push(res.data[i].symbol);
-  //     var stock = {
-  //       symbol: res.data[i].symbol,
-  //       name: res.data[i].name
-  //     }
-  //     $scope.data.filtered.push(stock);
-  //   }
-  //   console.log($scope.data.filtered);
-  //   displayFirst();
-  // })
-
-  $scope.showMore = function(){
-
-    for (var i = $scope.display - 1; i <= $scope.display + 19; i++) {
-      $http.get('https://api.iextrading.com/1.0/stock/'+$scope.symbols[i]+'/quote').then(function(res){
-
-        stock = {
-          symbol: res.data.symbol,
-          companyName: res.data.companyName,
-          latestPrice: res.data.latestPrice,
-          changePercent: res.data.changePercent
-        }
-        $scope.stocks.push(res.data);
-      })
-    }
-
-    $scope.display += 20;
+			$scope.stocks.push(stock);
+		})
   }
+})
 
-  $scope.filterStocks = function(){
-    $scope.display = 20;
-    $scope.stocks = [];
+.controller('watchList_cryptoCtrl', function($scope, $http, $ionicModal, $ionicPopover, $firebaseArray, $firebaseObject, $firebaseAuth) {
 
-    console.log($scope.data.filtered);
+	var authObj = $firebaseAuth();
+	var uid;
+	var user;
+	var watchlist;
 
-    for (var i = 0; i <= $scope.display - 1; i++) {
-      $http.get('https://api.iextrading.com/1.0/stock/'+$scope.data.filtered[i]+'/quote').then(function(res){
-        // test.push(res.data);
-        $scope.stocks.push(res.data);
-      })
-    }
+	$scope.stocks = [];
 
-    // var test = [];
-    // $scope.display = 20;
-    // console.log('Filtered: '+$scope.data.filtered);
-    // console.log('Res.data: '+test);
+	authObj.$onAuthStateChanged(function(firebaseUser) {
+		if (firebaseUser) {
+			uid = firebaseUser.uid;
+		  var watchlistRef = firebase.database().ref('users/'+uid+'/watchlist/stocks/'); 
+			watchlist = $firebaseArray(watchlistRef);
+			watchlist.$watch(function(event){
+				console.log(event);
+				if(event.event == 'child_added'){
+					displayStock(event.key);
+				}
+			}) 
+		} else {
+			console.log("Signed out");
+		}
+	})
+
+	var ratings = firebase.database().ref('ratings/');
+		ratings = $firebaseObject(ratings);
+		ratings.$loaded().then(function(){
+		$scope.ratings = ratings;
+		console.log(ratings);
+	})
+
+
+  function displayStock(symbol){
+		$http.get('https://min-api.cryptocompare.com/data/coin/generalinfo?fsyms='+symbol+'&tsym=USD').then(function(res){
+			$scope.coin.info = res.data.Data[0].CoinInfo;
+			console.log(res.data.Data[0].CoinInfo);
+		})
+		// $http.get('https://api.iextrading.com/1.0/stock/'+symbol+'/quote').then(function(res){
+
+		// 	var stock = {
+		// 		symbol: res.data.symbol,
+		// 		companyName: res.data.companyName,
+		// 		latestPrice: res.data.latestPrice,
+		// 		changePercent: res.data.changePercent
+		// 	}
+
+		// 	$scope.stocks.push(stock);
+		// })
   }
-
-  function displayFirst(){
-    
-  	$scope.stocks = [];
-
-    for (var i = 0; i <= 19; i++) {
-    	if($scope.symbols[i]){
-
-	      $http.get('https://api.iextrading.com/1.0/stock/'+$scope.symbols[i]+'/quote').then(function(res){
-
-	        var stock = {
-	          symbol: res.data.symbol,
-	          companyName: res.data.companyName,
-	          latestPrice: res.data.latestPrice,
-	          changePercent: res.data.changePercent
-	        }
-	        $scope.stocks.push(stock);
-	      })
-    	}
-    }
-    console.log($scope.stocks);
-  }
-
-  $ionicModal.fromTemplateUrl('stockDetails.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
-	$scope.openModal = function() {
-		$scope.modal.show();
-	};
-	$scope.closeModal = function() {
-		$scope.modal.hide();
-	};
-
-	$scope.openPopover = function($event) {
-		$scope.details.show($event);
-	};
 })
 
 .controller('connectsCtrl', function($scope, $ionicActionSheet, $firebaseArray, $firebaseObject, $firebaseAuth) {
@@ -1468,6 +1160,72 @@ angular.module('starter.controllers', [])
 	$scope.goBack = function(){
 		$ionicHistory.goBack();
 	}
+
+	var uid;
+
+	var authObj = $firebaseAuth();
+	authObj.$onAuthStateChanged(function(firebaseUser) {
+		if (firebaseUser) {
+			uid = firebaseUser.uid;
+			load_user();
+			load_comments();
+			load_ratings();
+			load_watchlist();
+		}
+	})
+
+	$scope.ratingText = ['Short', 'Sell', 'Hold', 'Buy', 'Strong Buy'];
+
+	$scope.comments = [];
+	$scope.ratings = [];
+	$scope.watchlist = [];
+
+	function load_user(){
+		var user = firebase.database().ref('users/'+uid);
+		user = $firebaseObject(user);
+		user.$loaded().then(function(){
+			$scope.user = user;
+			console.log($scope.user);
+		})
+	}
+
+	function load_comments(){
+		var comments = firebase.database().ref('users/'+uid+'/comments/');
+		comments = $firebaseObject(comments);
+		comments.$loaded().then(function(){
+			comments.forEach(function(obj, key){
+				$scope.comments.push({'symbol': key, 'obj': obj});
+			})
+		})
+	}
+
+	function load_ratings(){
+		var ratings = firebase.database().ref('users/'+uid+'/ratings/');
+		ratings = $firebaseObject(ratings);
+		ratings.$loaded().then(function(){
+			ratings.forEach(function(obj, key){
+				$scope.ratings.push({'symbol': key, 'obj': obj});
+			})
+		})
+	}
+
+	function load_watchlist(){
+		var watchlist = firebase.database().ref('users/'+uid+'/watchlist/');
+		watchlist = $firebaseObject(watchlist);
+		watchlist.$loaded().then(function(){
+			watchlist.forEach(function(obj, key){
+				$scope.watchlist.push(obj);
+			})
+			$scope.watchlist = Object.assign({}, $scope.watchlist[0], $scope.watchlist[1]);
+		})
+	}
+
+			// comments.$watch(function(){
+			// 	$scope.comments = comments;
+			// 	$scope.comments.forEach(function (obj) {
+			// 		obj;
+			// 	})
+			// })
 
 	// $scope.ratings = [
 	// 	'20180508': {

@@ -19,7 +19,7 @@
 		<div class="item item-text-wrap inside-tab-content" id="stock-comments" ng-if="tabs == 'comments'">
 			<div class="comments-write">
 					<textarea id="newComment" ng-model="rating.comment" ng-change="resize('newComment')" placeholder="Write a comment"></textarea>
-					<button class="button button-small" ng-click="sendComment()">
+					<button class="button button-small" ng-click="sendComment()" ng-disabled="!rating.comment">
 						Submit
 					</button>
 			</div>

@@ -1,12 +1,10 @@
 <ion-view view-title="Stocks">
 	<div class="tabs tabs-top" style="top: 0px;">
-		<a class="tab-item" href="#/app/stocks">Stocks</a>
-		<a class="tab-item tab-item-active" href="#/app/crypto">Crypto</a>
+		<a class="tab-item" href="#/app/watchList_stocks">Stocks</a>
+		<a class="tab-item tab-item-active" href="#/app/watchList_crypto">Crypto</a>
 	</div>
 	<ion-content class="has-tabs-top">
-
 		<ion-list class="stocks">
-
 			<ion-item class="item-stock" ng-repeat="coin in coins" href="#/app/cryptoDetails/{{coin.symbol}}">
 				<div class="row">
 					<div class="col-10">
@@ -38,7 +36,6 @@
 					</div>
 				</div>
 			</ion-item>
-			<button class="button button-block button-clear button-light" ng-click="showMore()">Show more...</button>
 		</ion-list>
 	</ion-content>
 </ion-view>

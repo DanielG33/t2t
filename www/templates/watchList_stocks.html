@@ -1,0 +1,41 @@
+<ion-view view-title="Stocks">
+	<div class="tabs tabs-top" style="top: 0px;">
+		<a class="tab-item tab-item-active" href="#/app/watchList_stocks">Stocks</a>
+		<a class="tab-item" href="#/app/watchList_crypto">Crypto</a>
+	</div>
+	<ion-content class="has-tabs-top">
+		<ion-list class="stocks">
+			<ion-item class="item-stock" ng-repeat="stock in stocks" href="#/app/watchList_stocks/details/{{stock.symbol}}">
+				<div class="row">
+					<div class="col-10">
+						<span
+						class="comunity-rating"
+						ng-if="ratings[stock.symbol].avg"
+						ng-class="{
+							'rate_1': (ratings[stock.symbol].avg / ratings[stock.symbol].qta) >= 1,
+							'rate_2': (ratings[stock.symbol].avg / ratings[stock.symbol].qta) >= 2,
+							'rate_3': (ratings[stock.symbol].avg / ratings[stock.symbol].qta) >= 3,
+							'rate_4': (ratings[stock.symbol].avg / ratings[stock.symbol].qta) >= 4,
+							'rate_5': (ratings[stock.symbol].avg / ratings[stock.symbol].qta) >= 4.6,
+						}">
+							{{ratings[stock.symbol].avg / ratings[stock.symbol].qta | number : 1}}
+						</span>
+						<span class="comunity-rating rate_0" ng-if="!ratings[stock.symbol].avg">-</span>
+					</div>
+					<div class="col col-70">
+						<h2 class="company-name">{{stock.symbol}} <br><small>{{stock.companyName | limitTo : 30}}</small></h2>
+					</div>
+					<div class="col col-20">
+						<span class="current-price">{{stock.latestPrice | currency}}</span>
+						<br>
+						<span class="price-change" ng-class="{'balanced' : stock.changePercent > 0, 'assertive' : stock.changePercent < 0}">
+							<i class="ion-arrow-up-b" ng-if="stock.changePercent > 0"></i>
+							<i class="ion-arrow-down-b" ng-if="stock.changePercent < 0"></i>
+							{{stock.changePercent * 100 | number : 2}}%
+						</span>
+					</div>
+				</div>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

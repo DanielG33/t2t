@@ -1,7 +1,7 @@
 <ion-view>
 	<ion-header-bar class="bar bar-dark" style="top: 0px">
 		<button class="button button-clear button-light icon-left ion-ios-arrow-back" ng-click="goBack()"></button>
-		<h1 class="title">{{coin.symbol}} - {{coin.name}}</h1>
+		<h1 class="title">{{coin.info.Name}} - {{coin.info.FullName}}</h1>
 		<div class="buttons">
 			<button class="button button-assertive button-clear button-icon icon" ng-class="{'ion-ios-heart': fav, 'ion-ios-heart-outline': !fav}" ng-click="add()"></button>
 			<!-- <button class="button button-icon button-clear ion-document-text" ng-click="displayDataBox()"></button> -->
@@ -32,65 +32,60 @@
 		<ion-scroll id="stock-details">
 			<div class="item item-text-wrap row">
 				<div class="col col-60">
-					<h2>{{coin.name}}</h2>
-					<h3>Rating: {{ratings[company.symbol].avg / ratings[company.symbol].qta | number : 1}}</h3>
+					<h2>{{coin.info.FullName}}</h2>
 				</div>
 				<div class="col col-40">
-					<h2> {{coin.quotes.USD.price | currency}} </h2>
+					<h2> {{coin.usd.PRICE | currency}} </h2>
 					<!-- <h3>{{ratingScore}} - {{ratingsArray.length}}</h3> -->
 				</div>
 			</div>
 			<div class="item item-body">
-				<b>Changes</b>
-				<div class="row">
-					<div class="col">
-						<h4>1 Hour</h4>
-						<span class="price-change" ng-class="{'balanced' : coin.quotes.USD.percent_change_1h > 0, 'assertive' : coin.quotes.USD.percent_change_1h < 0}">
-							<i class="ion-arrow-up-b" ng-if="coin.quotes.USD.percent_change_1h > 0"></i>
-							<i class="ion-arrow-down-b" ng-if="coin.quotes.USD.percent_change_1h < 0"></i>
-							{{coin.quotes.USD.percent_change_1h | number : 2}}%
-						</span>
-					</div>
-					<div class="col">
-						<h4>24 Hour</h4>
-						<span class="price-change" ng-class="{'balanced' : coin.quotes.USD.percent_change_24h > 0, 'assertive' : coin.quotes.USD.percent_change_24h < 0}">
-							<i class="ion-arrow-up-b" ng-if="coin.quotes.USD.percent_change_24h > 0"></i>
-							<i class="ion-arrow-down-b" ng-if="coin.quotes.USD.percent_change_24h < 0"></i>
-							{{coin.quotes.USD.percent_change_24h | number : 2}}%
-						</span>
-					</div>
-					<div class="col">
-						<h4>7 Days</h4>
-						<span class="price-change" ng-class="{'balanced' : coin.quotes.USD.percent_change_7d > 0, 'assertive' : coin.quotes.USD.percent_change_7d < 0}">
-							<i class="ion-arrow-up-b" ng-if="coin.quotes.USD.percent_change_7d > 0"></i>
-							<i class="ion-arrow-down-b" ng-if="coin.quotes.USD.percent_change_7d < 0"></i>
-							{{coin.quotes.USD.percent_change_7d | number : 2}}%
-						</span>
-					</div>
-				</div>
-				<br>
 				<div class="row">
 					<div class="col">
 						<ion-list>
 							<ion-item>
-								<h4>Market Cap USD</h4>
-								<span>{{coin.quotes.USD.market_cap | currency}}</span>
+								<h4>24H change</h4>
+								<span>{{coin.usd.CHANGE24HOUR | number : 2}} / {{coin.usd.CHANGEPCT24HOUR | number : 2}}%</span>
 							</ion-item>
 							<ion-item>
-								<h4>Circulating Supply</h4>
-								<span>{{coin.circulating_supply | number : 2}}</span>
+								<h4>Market Cap USD</h4>
+								<span>{{coin.usd.MKTCAP | currency}}</span>
+							</ion-item>
+							<ion-item>
+								<h4>Day Open</h4>
+								<span>{{coin.usd.OPENDAY | currency}}</span>
+							</ion-item>
+							<ion-item>
+								<h4>Day High</h4>
+								<span>{{coin.usd.HIGHDAY | currency}}</span>
+							</ion-item>
+							<ion-item>
+								<h4>Day Low</h4>
+								<span>{{coin.usd.LOWDAY | currency}}</span>
 							</ion-item>
 						</ion-list>
 					</div>
 					<div class="col">
 						<ion-list>
 							<ion-item>
-								<h4>Total Supply</h4>
-								<span>{{coin.total_supply | number : 2}}</span>
+								<h4>Day change</h4>
+								<span>{{coin.usd.CHANGEDAY | number : 2}} / {{coin.usd.CHANGEPCTDAY | number : 2}}%</span>
 							</ion-item>
 							<ion-item>
-								<h4>Max Supply</h4>
-								<span>{{coin.max_supply | number : 2}}</span>
+								<h4>Current Supply</h4>
+								<span>{{coin.usd.SUPPLY | number : 2}}</span>
+							</ion-item>
+							<ion-item>
+								<h4>24H Open</h4>
+								<span>{{coin.usd.OPEN24HOUR | currency}}</span>
+							</ion-item>
+							<ion-item>
+								<h4>24H High</h4>
+								<span>{{coin.usd.HIGH24HOUR | currency}}</span>
+							</ion-item>
+							<ion-item>
+								<h4>24H Low</h4>
+								<span>{{coin.usd.LOW24HOUR | currency}}</span>
 							</ion-item>
 						</ion-list>
 					</div>

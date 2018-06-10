@@ -70,19 +70,25 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'ngSanit
 		views: {
 			'app-stocks': {
 				templateUrl: 'templates/stocks.html',
-				controller: 'stocksCtrl',
-				cache: true,
-				reload: false
+				controller: 'stocksCtrl'
 			}
-		},
-		cache: true,
-		reload: false
+		}
 	})
 
 	.state('app.stockDetails', {
 		url: '/stockDetails/:symbol',
 		views: {
 			'app-stocks': {
+				templateUrl: 'templates/stockDetails.html',
+				controller: 'stockDetailsCtrl'
+			}
+		}
+	})
+
+	.state('app.watchList_stockDetails', {
+		url: 'watchList_stocks/details/:symbol',
+		views: {
+			'app-watch': {
 				templateUrl: 'templates/stockDetails.html',
 				controller: 'stockDetailsCtrl'
 			}
@@ -110,16 +116,35 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'ngSanit
 		}
 	})
 
-	.state('app.watchList', {
-		url: '/watchList',
-		views:{
+	.state('app.watchList_cryptoDetails', {
+		url: 'watchList_crypto/details/:symbol',
+		views: {
 			'app-watch': {
-				templateUrl: 'templates/watchList.html',
-				controller: 'watchListCtrl'
+				templateUrl: 'templates/cryptoDetails.html',
+				controller: 'cryptoDetailsCtrl'
 			}
 		}
 	})
 
+	.state('app.watchList_stocks', {
+		url: '/watchList_stocks',
+		views:{
+			'app-watch': {
+				templateUrl: 'templates/watchList_stocks.html',
+				controller: 'watchList_stocksCtrl'
+			}
+		}
+	})
+
+	.state('app.watchList_crypto', {
+		url: '/watchList_crypto',
+		views:{
+			'app-watch': {
+				templateUrl: 'templates/watchList_crypto.html',
+				controller: 'watchList_cryptoCtrl'
+			}
+		}
+	})
 
 	.state('app.connects', {
 		url: '/connects',

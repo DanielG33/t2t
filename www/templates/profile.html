@@ -7,11 +7,11 @@
 					<img src="https://i1.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?resize=256%2C256&quality=100" alt="">
 				</div>
 			</div>
-			<h3>Daniel Guzmán <small><i class="ion ion-ios-people"></i> 15</small></h3>
+			<h3>{{user.name}} <small><i class="ion ion-ios-people"></i> &#x221e;</small></h3>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, excepturi quas natus velit.</p>
 			<div class="social">
-				<a class="button icon-left ion-social-facebook button-clear button-light">/DanielGuzman</a>
-				<a class="button icon-left ion-social-twitter button-clear button-light">@DanielGuzman</a>
+				<a class="button icon-left ion-social-facebook button-clear button-light">/FacebookAccount</a>
+				<a class="button icon-left ion-social-twitter button-clear button-light">@TwitterUser</a>
 			</div>
 		</div>
 		<div class="user-data">
@@ -25,8 +25,8 @@
 					<label for="tab-ratings">Ratings</label>
 				</div>
 				<div class="col">
-					<input type="radio" id="tab-profile-comments" name="tabs" ng-model="tabs" value="profile-comments">
-					<label for="tab-profile-comments">Comments</label>
+					<input type="radio" id="tab-comments" name="tabs" ng-model="tabs" value="comments">
+					<label for="tab-comments">Comments</label>
 				</div>
 				<div class="col">
 					<input type="radio" id="tab-watchlist" name="tabs" ng-model="tabs" value="watchlist">
@@ -59,6 +59,32 @@
 						<select name="" id="" class="select">
 							<option value="CO">0-3 years</option>
 						</select>
+					</ion-item>
+				</ion-list>
+			</div>
+
+			<div class="item item-text-wrap inside-tab-content" ng-if="tabs == 'ratings'">
+				<ion-list>
+					<ion-item style="color: #444" ng-repeat="x in ratings">
+						{{x.symbol}}
+						<p style="color: #444" ng-repeat="rate in ratings[$index].obj">{{ratingText[rate-1]}}</p>
+					</ion-item>
+				</ion-list>
+			</div>
+
+			<div class="item item-text-wrap inside-tab-content" ng-if="tabs == 'comments'">
+				<ion-list>
+					<ion-item style="color: #444" ng-repeat="x in comments">
+						{{x.symbol}}
+						<p style="color: #444" ng-repeat="comment in comments[$index].obj">{{comment}}</p>
+					</ion-item>
+				</ion-list>
+			</div>
+
+			<div class="item item-text-wrap inside-tab-content" ng-if="tabs == 'watchlist'">
+				<ion-list>
+					<ion-item style="color: #444" ng-repeat="(key, value) in watchlist">
+						{{key}}
 					</ion-item>
 				</ion-list>
 			</div>
